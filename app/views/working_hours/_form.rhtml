@@ -1,0 +1,35 @@
+<%= error_messages_for 'working_hours' %>
+
+<!--[form:working_hours]-->
+
+<%= f.hidden_field 'project_id' %>
+<%= f.hidden_field 'issue_id' %>
+<%= f.hidden_field 'user_id' %>
+
+<p><label for="working_hours_workday">Workday</label>
+<%= f.text_field :workday, :size => 10 %><%= calendar_for('workday') %>
+
+<hr/>
+<%= radio_button_tag("subform", "Timestamps", true, "onclick"=>"Element.hide('duration');Element.show('timestamps')") %> Timestamps
+<%= radio_button_tag("subform", "Duration", false, "onclick"=>"Element.hide('timestamps');Element.show('duration')") %> Duration
+
+<div id="timestamps">
+  <p><%= f.text_field :starting, :size => 25 %></p>
+  
+  <p><%= f.text_field 'break', "size" => 5  %></p>
+  
+  <p>
+  <%= f.text_field :ending, :size => 25 %>
+  Running: <%= check_box_tag 'running', "1", @working_hours.ending.nil?  %>
+  </p>
+</div>
+
+<div id="duration" style="display:none">
+  <p><label for="working_hours_duration">Hours</label>
+  <%= text_field_tag 'duration', @duration, "size" => 5  %></p>
+</div>
+
+<hr/>
+
+<p><%= f.text_area 'comments', "cols" => 40, "rows" => 3  %></p>
+<!--[eoform:working_hours]-->

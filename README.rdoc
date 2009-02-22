@@ -1,0 +1,3 @@
+= Working hours plugin for Redmine
+
+The time tracker we use for our daily work at Sourcepole.

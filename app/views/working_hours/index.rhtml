@@ -1,0 +1,24 @@
+<h2><%=l(:label_working_hours)%></h2>
+
+<% form_tag({ :action => 'index' }, :id => 'query_form') do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+  Begin: <%= text_field_tag :begindate, params[:begindate], :size => 10 %><%= calendar_for('begindate') %>
+  End: <%= text_field_tag :enddate, params[:enddate], :size => 10 %><%= calendar_for('enddate') %>
+  Project: <%= collection_select(:filter, :project_id, User.current.projects, :id, :name, {:include_blank => true}) %>
+</fieldset>
+
+<div class="contextual">
+    <%= link_to_function l(:button_apply), "$('query_form').submit()", :class => 'icon icon-checked' %>
+                       
+    <%= link_to l(:button_clear), {}, :class => 'icon icon-reload'  %>
+
+    <%= link_to l(:label_export_to)+' CSV', {:overwrite_params => { :export => 'csv' }}, :class => 'icon icon-csv' %>
+</div>
+<% end %>
+
+<br />
+<% if @working_hours.empty? %>
+<p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+<%= render :partial => 'working_hours/list', :locals => {:working_hours => @working_hours} %>
+<% end %>
