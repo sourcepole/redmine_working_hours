@@ -1,3 +1,8 @@
 = Working hours plugin for Redmine
 
 The time tracker we use for our daily work at Sourcepole.
+
+This plugin provides an additional section on your personal page for tracking your time spent on projects and tickets.
+
+Tips:
+* We collect all customer projects without Redmine project as tickets in a separate project.
