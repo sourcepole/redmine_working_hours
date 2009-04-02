@@ -23,6 +23,7 @@ class WorkingHoursController < ApplicationController
     @minutes_total = @working_hours.inject(0) { |sum, j| sum + j.minutes }
 
     send_csv and return if 'csv' == params[:export]    
+    send_ics and return if 'ics' == params[:export]
 
     @working_hours =  WorkingHours.find :all,:order => "#{WorkingHours.table_name}.starting DESC",
       :conditions => conditions,
@@ -186,5 +187,44 @@ class WorkingHoursController < ApplicationController
     export.rewind
     send_data(export.read, :type => 'text/csv; header=present', :filename => 'export.csv')
   end
+  
+  def send_ics
+    ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
+    export = StringIO.new
+    export << ic.iconv("BEGIN:VCALENDAR\n")
+    export << ic.iconv("VERSION:2.0\n")
+    export << ic.iconv("PRODID:-//Sourcepole//NONSGML Redmine Working Hours//EN\n")
+    @working_hours.each do |entry|
+      export << ic.iconv("BEGIN:VEVENT\n")
+      export << ic.iconv("DTSTART:#{date_to_utc_text(entry.starting)}\n")
+      export << ic.iconv("DTEND:#{date_to_utc_text(entry.ending)}\n")
+      task = entry.issue ? "\\n##{entry.issue_id} #{entry.issue.subject}": ""
+      export << ic.iconv("SUMMARY:#{entry.project.name}#{task}\n")
+      export << ic.iconv("DESCRIPTION:#{entry.comments}\n")
+      export << ic.iconv("ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n")
+      export << ic.iconv("END:VEVENT\n\n")
+    end
+    export << ic.iconv("END:VCALENDAR\n")
+    export.rewind
+    send_data(export.read, :type => 'text/calendar', :filename => 'export.ics')    
+  end
 
+  # convert local date to UTC date text "%Y%m%dT%H%M%SZ"
+  def date_to_utc_text(date, hour_shift = -2)
+    if Time::DATE_FORMATS[:utc_prefix].nil?
+      # init custom date formats
+      Time::DATE_FORMATS[:utc_prefix] = "%Y%m%dT"
+      Time::DATE_FORMATS[:utc_hours] = "%H"
+      Time::DATE_FORMATS[:utc_postfix] = "%M%SZ"
+    end
+
+    text = ""
+    unless date.nil?
+      prefix = date.to_formatted_s(:utc_prefix)
+      hours = date.to_formatted_s(:utc_hours).to_i + hour_shift
+      postfix = date.to_formatted_s(:utc_postfix)
+      text = prefix + ("%02d" % hours) + postfix
+    end
+    text
+  end
 end
