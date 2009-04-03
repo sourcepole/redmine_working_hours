@@ -207,8 +207,8 @@ class WorkingHoursController < ApplicationController
       export << ic.iconv("DTEND:#{date_to_utc_text(entry.ending)}\n")
       task = entry.issue ? "\\n##{entry.issue_id} #{entry.issue.subject}": ""
       export << ic.iconv("SUMMARY:#{entry.project.name}#{task}\n")
-      comments = entry.comments.gsub(/\r\n|\n/, "\\n") || entry.comments
-      export << ic.iconv("DESCRIPTION:#{(comments)}\n")
+      comments = entry.comments.to_s.gsub(/\r\n|\n/, "\\n")
+      export << ic.iconv("DESCRIPTION:#{comments}\n")
       export << ic.iconv("ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n")
       export << ic.iconv("END:VEVENT\n\n")
     end
