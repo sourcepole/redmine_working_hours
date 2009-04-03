@@ -4,5 +4,26 @@ The time tracker we use for our daily work at Sourcepole.
 
 This plugin provides an additional section on your personal page for tracking your time spent on projects and tickets.
 
-Tips:
+==Installation:
+get Redmine sourcepole branch:
+
+ git clone git://github.com/pka/redmine.git
+ cd redmine
+ git checkout -b sourcepole origin/sourcepole
+
+get working hours plugin:
+
+ cd vendor/plugins
+ git clone git://github.com/pka/redmine_working_hours.git
+
+install Redmine
+
+migrate plugin DB:
+ rake db:migrate_plugins
+
+==Features:
+* time tracking with ticket assignment
+* iCalendar view
+
+==Tips:
 * We collect all customer projects without Redmine project as tickets in a separate project.
