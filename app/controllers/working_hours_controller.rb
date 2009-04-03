@@ -2,10 +2,17 @@ class WorkingHoursController < ApplicationController
   unloadable #Don't understand it, but prevents exception "A copy of ApplicationController has been removed from the module tree but is still active"
   layout 'base'
   before_filter :require_login
+  accept_key_auth :index
 
   def index
-    params[:begindate] ||= Date.today
-    params[:enddate] ||= Date.today
+    if 'ics' == params[:export]
+      params[:duration] ||= 365
+      params[:begindate] ||= Date.today - params[:duration].to_s.to_i
+      params[:enddate] ||= Date.today      
+    else
+      params[:begindate] ||= Date.today
+      params[:enddate] ||= Date.today
+    end
     params[:begindate] = Date.today if params[:begindate].to_date > Date.today
     params[:enddate] = params[:begindate] if params[:enddate].to_date < params[:begindate].to_date
     conditions = ["user_id=? AND workday >= ? AND workday <= ?",
@@ -200,7 +207,8 @@ class WorkingHoursController < ApplicationController
       export << ic.iconv("DTEND:#{date_to_utc_text(entry.ending)}\n")
       task = entry.issue ? "\\n##{entry.issue_id} #{entry.issue.subject}": ""
       export << ic.iconv("SUMMARY:#{entry.project.name}#{task}\n")
-      export << ic.iconv("DESCRIPTION:#{entry.comments}\n")
+      comments = entry.comments.gsub(/\r\n|\n/, "\\n") || entry.comments
+      export << ic.iconv("DESCRIPTION:#{(comments)}\n")
       export << ic.iconv("ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n")
       export << ic.iconv("END:VEVENT\n\n")
     end
