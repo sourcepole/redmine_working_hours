@@ -7,7 +7,7 @@
 <%= f.hidden_field 'user_id' %>
 
 <p><label for="working_hours_workday">Workday</label>
-<%= f.text_field :workday, :size => 10 %><%= calendar_for('workday') %>
+<%= f.text_field :workday, :size => 10 %><%= calendar_for('working_hours_workday') %>
 
 <hr/>
 <%= radio_button_tag("subform", "Timestamps", true, "onclick"=>"Element.hide('duration');Element.show('timestamps')") %> Timestamps
