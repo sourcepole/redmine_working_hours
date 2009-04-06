@@ -196,23 +196,22 @@ class WorkingHoursController < ApplicationController
   end
   
   def send_ics
-    ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
     export = StringIO.new
-    export << ic.iconv("BEGIN:VCALENDAR\n")
-    export << ic.iconv("VERSION:2.0\n")
-    export << ic.iconv("PRODID:-//Sourcepole//NONSGML Redmine Working Hours//EN\n")
+    export << "BEGIN:VCALENDAR\n"
+    export << "VERSION:2.0\n"
+    export << "PRODID:-//Sourcepole//NONSGML Redmine Working Hours//EN\n"
     @working_hours.each do |entry|
-      export << ic.iconv("BEGIN:VEVENT\n")
-      export << ic.iconv("DTSTART:#{date_to_utc_text(entry.starting)}\n")
-      export << ic.iconv("DTEND:#{date_to_utc_text(entry.ending)}\n")
+      export << "BEGIN:VEVENT\n"
+      export << "DTSTART:#{date_to_utc_text(entry.starting)}\n"
+      export << "DTEND:#{date_to_utc_text(entry.ending)}\n"
       task = entry.issue ? "\\n##{entry.issue_id} #{entry.issue.subject}": ""
-      export << ic.iconv("SUMMARY:#{entry.project.name}#{task}\n")
+      export << "SUMMARY:#{entry.project.name}#{task}\n"
       comments = entry.comments.to_s.gsub(/\r\n|\n/, "\\n")
-      export << ic.iconv("DESCRIPTION:#{comments}\n")
-      export << ic.iconv("ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n")
-      export << ic.iconv("END:VEVENT\n\n")
+      export << "DESCRIPTION:#{comments}\n"
+      export << "ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n"
+      export << "END:VEVENT\n\n"
     end
-    export << ic.iconv("END:VCALENDAR\n")
+    export << "END:VCALENDAR\n"
     export.rewind
     send_data(export.read, :type => 'text/calendar', :filename => 'export.ics')    
   end
