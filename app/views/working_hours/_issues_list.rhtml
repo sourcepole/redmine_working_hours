@@ -1,0 +1,2 @@
+<p><label for="working_hours_issue_id"><%= l(:field_issue) %></label>
+<%= collection_select :working_hours, :issue_id, @issues, :id, :subject, {:include_blank => true} %>

@@ -2,12 +2,18 @@
 
 <!--[form:working_hours]-->
 
-<%= f.hidden_field 'project_id' %>
-<%= f.hidden_field 'issue_id' %>
 <%= f.hidden_field 'user_id' %>
 
-<p><label for="working_hours_workday">Workday</label>
-<%= f.text_field :workday, :size => 10 %><%= calendar_for('working_hours_workday') %>
+<p><%= f.text_field :workday, :size => 10 %><%= calendar_for('working_hours_workday') %>
+
+<p><label for="working_hours_project_id"><%= l(:field_project) %></label>
+<%= f.collection_select :project_id, User.current.projects, :id, :name, {:include_blank => false} %>
+
+<div id='issues_list'>
+<%= render :partial => 'issues_list' %>
+</div>
+
+<%= observe_field 'working_hours_project_id', :update => 'issues_list', :url => {:action => 'update_edit_issues'}, :with => "'change_project_id=' + encodeURIComponent(value)" %>
 
 <hr/>
 <%= radio_button_tag("subform", "Timestamps", true, "onclick"=>"Element.hide('duration');Element.show('timestamps')") %> Timestamps

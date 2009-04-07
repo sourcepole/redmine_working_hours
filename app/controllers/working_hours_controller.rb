@@ -63,8 +63,14 @@ class WorkingHoursController < ApplicationController
     @working_hours = WorkingHours.find(params[:id])
     @duration = '%.1f' % (@working_hours.minutes/60.0)
     @users = User.find(:all)
+    @issues = Issue.find_all_by_project_id(@working_hours.project_id)
   end
 
+  def update_edit_issues
+    @issues = Issue.find_all_by_project_id(params[:change_project_id])
+    render :partial => 'issues_list'
+  end
+  
   def update
     @working_hours = WorkingHours.find(params[:id])
     @working_hours.attributes = params[:working_hours]
