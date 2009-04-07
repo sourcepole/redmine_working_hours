@@ -1,2 +1,10 @@
 label_working_hours: Arbeitszeit
 label_working_hours_list: Arbeitszeit ansehen
+label_running: Aktiv
+label_timestamps: Zeitstempel
+label_duration: Zeitdauer
+
+field_workday: Arbeitstag
+field_starting: Start
+field_ending: Ende
+field_break: Pause
