@@ -73,6 +73,13 @@ class WorkingHoursController < ApplicationController
     render :partial => 'issues_list'
   end
   
+  def update_comments
+    @working_hours = WorkingHours.find(params[:id])
+    @working_hours.attributes = params[:working_hours]
+    @working_hours.save
+    render(:partial => 'my/blocks/workinghours')
+  end
+  
   def update
     @working_hours = WorkingHours.find(params[:id])
     @working_hours.attributes = params[:working_hours]

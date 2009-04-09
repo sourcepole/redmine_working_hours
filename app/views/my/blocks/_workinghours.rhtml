@@ -56,6 +56,14 @@ var curtimer=null;
 
 <p class="small"><%= link_to l(:label_working_hours_list), :controller => 'working_hours' %></p>
 
+<% if !@cur_entry.nil? && @cur_entry.running? %>
+  <% remote_form_for @cur_entry, :url => {:controller => 'working_hours', :action => 'update_comments', :id => @cur_entry}, :update => 'workinghours' do |f| %> 
+    <label for="working_hours_comments"><%=  l(:field_comments) %></label><br>
+    <%= f.text_area :comments, "cols" => 40, "rows" => 2 %><br>
+    <%= submit_tag l(:button_save) %>
+  <% end %>
+<% end %>
+
 <% content_for :header_tags do %>
     <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
 <% end %>
