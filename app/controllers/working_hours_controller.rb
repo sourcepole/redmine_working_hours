@@ -86,7 +86,7 @@ class WorkingHoursController < ApplicationController
     working_hours_calculations
     if @working_hours.save
       flash[:notice] = 'WorkingHours was successfully updated.'
-      redirect_to :action => 'index'
+      redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
     else
       render :action => 'edit'
     end

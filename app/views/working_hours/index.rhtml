@@ -4,7 +4,7 @@
 <fieldset><legend><%= l(:label_filter_plural) %></legend>
   Begin: <%= text_field_tag :begindate, params[:begindate], :size => 10 %><%= calendar_for('begindate') %>
   End: <%= text_field_tag :enddate, params[:enddate], :size => 10 %><%= calendar_for('enddate') %>
-  Project: <%= collection_select(:filter, :project_id, User.current.projects, :id, :name, {:include_blank => true}) %>
+  Project: <%= select_tag "filter[project_id]", "<option value=\"\"></option>" + options_from_collection_for_select(User.current.projects, :id, :name, params[:filter][:project_id].to_s.to_i) %>
 </fieldset>
 
 <div class="contextual">

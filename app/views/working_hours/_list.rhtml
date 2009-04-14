@@ -23,7 +23,7 @@
     <td><%= to_time_s(entry.ending, entry.workday) unless entry.ending.nil? %></td>
     <td><%= truncate(h(entry.comments), 30) %></td>
     <td><%= duration(entry.minutes) %></td>
-    <td><%= link_to l(:button_edit), {:action => 'edit', :id => entry}, :class => 'icon icon-edit' %></td>
+    <td><%= link_to l(:button_edit), {:action => 'edit', :id => entry, :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]}, :class => 'icon icon-edit' %></td>
     <td><%= link_to l(:button_delete), {:action => 'destroy', :id => entry}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
   </tr>
   <% end %>
