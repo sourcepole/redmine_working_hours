@@ -5,9 +5,9 @@
   Begin: <%= text_field_tag :begindate, params[:begindate], :size => 10 %><%= calendar_for('begindate') %>
   End: <%= text_field_tag :enddate, params[:enddate], :size => 10 %><%= calendar_for('enddate') %>
   <%= l(:field_project) %>: <%= select_tag "filter[project_id]", "<option value=\"\">#{l(:label_all)}</option>" + options_from_collection_for_select(User.current.projects, :id, :name, params[:filter][:project_id].to_s.to_i) %>
-  <div id='issues_list'>
+  <span id='issues_list'>
     <%= render :partial => 'issues_list' %>
-  </div>
+  </span>
 </fieldset>
 
 <%= observe_field 'filter[project_id]', :update => 'issues_list', :url => {:action => 'update_issues'}, :with => "'change_project_id=' + encodeURIComponent(value)" %>
