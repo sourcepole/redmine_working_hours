@@ -113,7 +113,7 @@ class WorkingHoursController < ApplicationController
   def working_hours_calculations
     case params['subform']
       when 'Timestamps'
-        if params['running']
+        if params['running'] && params[:working_hours][:ending].empty?
           @working_hours.ending = nil
         end
       when 'Duration'
