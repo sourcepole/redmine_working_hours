@@ -18,9 +18,14 @@ class WorkingHoursController < ApplicationController
     conditions = ["user_id=? AND workday >= ? AND workday <= ?",
       User.current.id, params[:begindate], params[:enddate]]
     params[:filter] ||= {}
-    if !params[:filter][:project_id].nil? && !params[:filter][:project_id].empty? then
-        conditions.first << " AND project_id=?"
-        conditions << params[:filter][:project_id]
+    if !params[:filter][:issue_id].nil? && !params[:filter][:issue_id].empty? then
+        conditions.first << " AND issue_id=?"
+        conditions << params[:filter][:issue_id]
+    else
+      if !params[:filter][:project_id].nil? && !params[:filter][:project_id].empty? then
+          conditions.first << " AND project_id=?"
+          conditions << params[:filter][:project_id]
+      end
     end
     @working_hour_count = WorkingHours.count(:conditions => conditions)
     @working_hour_pages = Paginator.new self, @working_hour_count,
@@ -31,6 +36,10 @@ class WorkingHoursController < ApplicationController
 
     send_csv and return if 'csv' == params[:export]    
     send_ics and return if 'ics' == params[:export]
+
+    unless params[:filter][:project_id].nil?
+      @issues = project_issues(params[:filter][:project_id])
+    end
 
     @working_hours =  WorkingHours.find :all,:order => "#{WorkingHours.table_name}.starting DESC",
       :conditions => conditions,
@@ -67,12 +76,16 @@ class WorkingHoursController < ApplicationController
     @issues = WorkingHours.task_issues(project)
   end
 
-  def update_edit_issues
-    project = User.current.projects.find(params[:change_project_id])
-    @issues = WorkingHours.task_issues(project)
+  def update_issues
+    @issues = project_issues(params[:change_project_id])
     render :partial => 'issues_list'
   end
-  
+
+  def update_edit_issues
+    @issues = project_issues(params[:change_project_id])
+    render :partial => 'edit_issues_list'
+  end
+
   def update_comments
     @working_hours = WorkingHours.find(params[:id])
     @working_hours.attributes = params[:working_hours]
@@ -249,4 +262,14 @@ class WorkingHoursController < ApplicationController
     end
     text
   end
+
+  private
+
+  def project_issues(project_id)
+    unless project_id.empty?
+      project = User.current.projects.find(project_id.to_s.to_i)
+      WorkingHours.task_issues(project)
+    end
+  end
+
 end

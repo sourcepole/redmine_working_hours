@@ -1,2 +1,6 @@
-<p><label for="working_hours_issue_id"><%= l(:field_issue) %></label>
-<%= collection_select :working_hours, :issue_id, @issues, :id, :subject, {:include_blank => true} %>
+<%= l(:field_issue) %>:
+<% options = "<option value=\"\">#{l(:label_all)}</option>" %>
+<% unless @issues.nil? %>
+  <% options += options_from_collection_for_select(@issues, :id, :subject, (params[:filter].nil? ? 0 : params[:filter][:issue_id].to_s.to_i)) %>
+<% end %>
+<%= select_tag "filter[issue_id]", options %>

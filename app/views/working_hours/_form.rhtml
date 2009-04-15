@@ -10,7 +10,7 @@
 <%= f.collection_select :project_id, User.current.projects, :id, :name, {:include_blank => false} %>
 
 <div id='issues_list'>
-<%= render :partial => 'issues_list' %>
+<%= render :partial => 'edit_issues_list' %>
 </div>
 
 <%= observe_field 'working_hours_project_id', :update => 'issues_list', :url => {:action => 'update_edit_issues'}, :with => "'change_project_id=' + encodeURIComponent(value)" %>
