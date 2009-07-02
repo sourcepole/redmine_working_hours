@@ -25,10 +25,25 @@
   <p><%= f.text_field 'break', "size" => 5  %></p>
   
   <p>
-  <%= f.text_field :ending, :size => 25 %>
-  <%= l(:label_running) %><%= check_box_tag 'running', "1", @working_hours.ending.nil?  %>
+  <%= f.text_field :ending, :size => 25, :onkeyup => "updateRunning(this.form)", :onchange => "updateRunning(this.form)" %>
+  <%= l(:label_running) %><%= check_box_tag 'running', "1", @working_hours.ending.nil?, :onclick => "updateEnding(this.form)" %>
   </p>
 </div>
+
+<%= javascript_tag "function updateRunning(form)
+{
+  form.running.checked = (form.working_hours_ending.value == '');
+}
+
+function updateEnding(form){
+  if (form.running.checked)
+  {
+    form.working_hours_ending.value = '';
+  }
+  else {
+    form.working_hours_ending.value = '#{@working_hours.ending.nil? ? '' : @working_hours.ending.to_formatted_s(:db)}';
+  }
+}" %>
 
 <div id="duration" style="display:none">
   <p><label for="working_hours_duration">Hours</label>
