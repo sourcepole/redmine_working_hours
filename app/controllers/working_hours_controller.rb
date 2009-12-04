@@ -49,11 +49,10 @@ class WorkingHoursController < ApplicationController
   end
 
   def new
-    @working_hours = WorkingHours.new
-    @working_hours.user = User.current
-    @working_hours.starting = Time.now
-    @working_hours.break = 0
-    @users = User.find(:all)
+    @working_hours = WorkingHours.start(User.current, Time.now)
+    @duration = '%.1f' % (@working_hours.minutes/60.0)
+    project = User.current.projects.first
+    @issues = WorkingHours.task_issues(project)
   end
 
   def create
