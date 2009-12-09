@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class WorkingHoursTest < Test::Unit::TestCase
-  fixtures :working_hours, :users, :issues
+  fixtures :working_hours, :users, :issues, :projects
 
   def setup
     @working_hours = WorkingHours.find(1)
