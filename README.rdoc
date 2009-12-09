@@ -25,5 +25,9 @@ install Redmine
 migrate plugin DB:
  rake db:migrate_plugins
 
+Run the unit tests:
+ RAILS_ENV=test rake db:migrate_plugins
+ rake test:plugins:units
+
 ==Tips:
 * We collect all customer projects without Redmine project as tickets in a separate project.
