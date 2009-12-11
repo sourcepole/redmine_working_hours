@@ -37,3 +37,30 @@
 <% else %>
 <%= render :partial => 'working_hours/list', :locals => {:working_hours => @working_hours} %>
 <% end %>
+
+<p/>
+<h3><%= l(:label_overview) %></h3>
+
+<table>
+  <tr>
+    <td><%= l(:label_today) %></td>
+    <td><%= duration(WorkingHours.total_minutes_today) %></td>
+  </tr>
+  <tr>
+    <td><%= l(:label_this_month_current) %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.total_minutes_month(Time.now.month)/60.0)}h" %></td>
+  </tr>
+  <tr>
+    <td><%= l(:label_this_month_target) %></td>
+    <td><%= "#{'%.1f' % (Holiday.target_minutes_month(Time.now.month)/60.0)}h" %></td>
+  </tr>
+  <tr>
+    <td><%= l(:label_diff_until_now) %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_now()/60.0)}h" %></td>
+  </tr>
+  <tr>
+    <% last_day_of_last_month = Time.local(Time.now.year, Time.now.month, 1).to_date - 1 %>
+    <td><%= l(:label_diff_until_date, last_day_of_last_month+1) %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(last_day_of_last_month)/60.0)}h" %></td>
+  </tr>
+</table>

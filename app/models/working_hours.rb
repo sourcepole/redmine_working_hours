@@ -47,6 +47,55 @@ class WorkingHours < ActiveRecord::Base
     rec.workday = starting #? date only
     rec
   end
+  
+  def self.total_minutes(start_date, end_date)
+    working_hours = find :all, :conditions => ["user_id=? AND workday>=? AND workday<=?", User.current.id, start_date, end_date]
+    working_hours.inject(0) { |sum, j| sum + j.minutes }
+  end
+  
+  def self.total_minutes_month(month, year = nil)
+    start_date = Time.local(year || Time.now.year, month, 1).to_date
+    # TODO: better end of month method?
+    if month == 12
+      end_date = Time.local(year || Time.now.year, 12, 31).to_date
+    else
+      end_date = Time.local(year || Time.now.year, (month+1), 1).to_date - 1
+    end
+    total_minutes(start_date, end_date)
+  end
+  
+  def self.total_minutes_day(date)
+    total_minutes(date, date)
+  end
+
+  def self.total_minutes_today()
+    total_minutes_day(Date.today)
+  end
+
+  def self.total_minutes_until_day(end_date)
+    start_date = Time.local(Time.now.year, 1, 1).to_date
+    total_minutes(start_date, end_date)
+  end
+  
+  def self.total_minutes_until_now()
+    total_minutes_until_day(Date.today)
+  end
+
+  def self.diff_minutes(start_date, end_date)
+    target_minutes = Holiday.target_minutes(start_date, end_date)
+    total_minutes = total_minutes(start_date, end_date)
+    total_minutes - target_minutes
+  end
+
+  def self.diff_minutes_until_day(end_date)
+    target_minutes = Holiday.target_minutes_until_day(end_date)
+    total_minutes = total_minutes_until_day(end_date)
+    total_minutes - target_minutes
+  end
+
+  def self.diff_minutes_until_now()
+    diff_minutes_until_day(Date.today)
+  end
 
   def minutes
     return 0 if starting.nil?

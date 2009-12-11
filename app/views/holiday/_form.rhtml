@@ -1,0 +1,4 @@
+<%= error_messages_for 'holidays' %>
+
+<p><%= f.text_field :day, :size => 10, :value => @holiday.day.to_date.to_formatted_s(:db) %><%= calendar_for('holidays_day') %></p>
+<p><%= f.text_field :hours, :size => 5, :value => @holiday.hours %></p>

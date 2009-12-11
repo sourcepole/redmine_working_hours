@@ -80,4 +80,30 @@ class WorkingHoursTest < Test::Unit::TestCase
     assert_equal 1, entry.minutes
   end
 
+  def test_total_time
+    minutes = WorkingHours.total_minutes(Time.local(2003, 1, 1).to_date, Time.local(2003, 12, 31).to_date)
+    assert_equal 2162, minutes
+
+    minutes_a = WorkingHours.total_minutes(Time.local(2004, 6, 1).to_date, Time.local(2004, 6, 30).to_date)
+    assert_equal 717, minutes_a
+    minutes_b = WorkingHours.total_minutes_month(6, 2004)
+    assert_equal minutes_a, minutes_b
+
+    minutes = WorkingHours.total_minutes_day(Time.local(2003, 1, 31).to_date)
+    assert_equal 565, minutes
+
+    minutes_a = WorkingHours.total_minutes_until_day(Date.today)
+    assert_equal 0, minutes_a
+    minutes_b = WorkingHours.total_minutes_until_now()
+    assert_equal minutes_a, minutes_b
+  end
+
+  def test_diff_time
+    diff = WorkingHours.diff_minutes(Time.local(2003, 1, 1).to_date, Time.local(2003, 10, 31).to_date)
+    assert_equal(-102478, diff)
+
+    diff_a = WorkingHours.diff_minutes_until_day(Date.today)
+    diff_b = WorkingHours.diff_minutes_until_now()
+    assert_equal diff_a, diff_b
+  end
 end

@@ -4,8 +4,17 @@ label_working_hours_new: Arbeitszeit hinzufügen
 label_running: Aktiv
 label_timestamps: Zeitstempel
 label_duration: Zeitdauer
+label_holidays: Feiertage
+label_holidays_new: Feiertag hinzufügen
+
+label_this_month_current: aktueller Monat (Ist)
+label_this_month_target: aktueller Monat (Soll)
+label_diff_until_now: Differenz bis heute
+label_diff_until_date: Differenz bis %s
 
 field_workday: Arbeitstag
 field_starting: Start
 field_ending: Ende
 field_break: Pause
+
+field_day: Datum

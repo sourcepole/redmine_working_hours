@@ -4,8 +4,17 @@ label_working_hours_new: Add working hours
 label_running: Running
 label_timestamps: Timestamps
 label_duration: Duration
+label_holidays: Holidays
+label_holidays_new: Add holiday
+
+label_this_month_current: this month (current)
+label_this_month_target: this month (target)
+label_diff_until_now: Difference until today
+label_diff_until_date: Difference until %s
 
 field_workday: Workday
 field_starting: Start
 field_ending: End
 field_break: Break
+
+field_day: Date
