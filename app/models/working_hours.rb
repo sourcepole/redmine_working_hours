@@ -10,6 +10,7 @@ class WorkingHours < ActiveRecord::Base
   before_destroy :destroy_time_entry
   
   COMMON_TASKS_USER = 'admin'
+  VACATION_ISSUE_SUBJECT = 'Ferien'
 
   def self.find_current(user)
     find(:first, :conditions => ["ending IS NULL AND user_id=?", user.id], :order => "#{self.table_name}.starting DESC")
@@ -95,6 +96,39 @@ class WorkingHours < ActiveRecord::Base
 
   def self.diff_minutes_until_now()
     diff_minutes_until_day(Date.today)
+  end
+  
+  def self.user_vacation_days()
+    vacation_days = 0
+    custom_field = CustomField.find_by_name('working_hours_vacation_days')
+    unless custom_field.nil?
+      cv = CustomValue.find(:first, :conditions => ["custom_field_id=? AND customized_id=?", custom_field.id, User.current.id])
+      vacation_days = cv.value.to_i
+    end
+    vacation_days
+  end
+
+  def self.vacation_issue()
+    Issue.find_by_subject(VACATION_ISSUE_SUBJECT)
+  end
+  
+  def self.vacation_days_used()
+    start_date = Time.local(Time.now.year, 1, 1).to_date
+    end_date = Date.today
+    working_hours = find :all, :conditions => ["user_id=? AND issue_id=? AND workday>=? AND workday<=?", User.current.id, vacation_issue().id, start_date, end_date]
+    days_used = 0.0
+    working_hours.each do |wh|
+      if wh.minutes/60.0 > Holiday::WORKDAY_HOURS/2.0
+        days_used += 1.0
+      else
+        days_used += 0.5
+      end
+    end
+    days_used
+  end
+  
+  def self.vacation_days_available()
+    user_vacation_days() - vacation_days_used()
   end
 
   def minutes

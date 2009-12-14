@@ -6,6 +6,9 @@ label_timestamps: Zeitstempel
 label_duration: Zeitdauer
 label_holidays: Feiertage
 label_holidays_new: Feiertag hinzufügen
+label_holidays_edit: Feiertage bearbeiten
+label_vacation: Ferien
+label_vacation_left: Verbleibende Ferien
 
 label_this_month_current: aktueller Monat (Ist)
 label_this_month_target: aktueller Monat (Soll)

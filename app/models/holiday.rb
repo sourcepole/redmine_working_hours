@@ -1,7 +1,17 @@
 class Holiday < ActiveRecord::Base
   validates_presence_of :day, :hours
 
-  WORKDAY_HOURS = 8
+  WORKDAY_HOURS = 8.0
+
+  def self.user_pensum()
+    pensum = 1.0
+    custom_field = CustomField.find_by_name('working_hours_pensum')
+    unless custom_field.nil?
+      cv = CustomValue.find(:first, :conditions => ["custom_field_id=? AND customized_id=?", custom_field.id, User.current.id])
+      pensum = cv.value.to_f
+    end
+    pensum
+  end
 
   def self.target_minutes(start_date, end_date)
     minutes = 0
@@ -26,6 +36,7 @@ class Holiday < ActiveRecord::Base
       t += 1
     end
 
+    minutes *= user_pensum()
     minutes
   end
 

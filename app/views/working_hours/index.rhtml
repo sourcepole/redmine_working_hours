@@ -1,5 +1,9 @@
 <h2><%=l(:label_working_hours)%></h2>
 
+<% if User.current.admin? %>
+  <p><%= link_to l(:label_holidays_edit), {:controller => 'holiday', :action => 'index'}, :class => 'icon icon-ics' %></p>
+<% end %>
+
 <% form_tag({ :action => 'index' }, :id => 'query_form') do %>
 <fieldset><legend><%= l(:label_filter_plural) %></legend>
   Begin: <%= text_field_tag :begindate, params[:begindate], :size => 10, :onkeyup => "applyOnEnter(event)" %><%= calendar_for('begindate') %>
@@ -62,5 +66,9 @@
     <% last_day_of_last_month = Time.local(Time.now.year, Time.now.month, 1).to_date - 1 %>
     <td><%= l(:label_diff_until_date, last_day_of_last_month+1) %></td>
     <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(last_day_of_last_month)/60.0)}h" %></td>
+  </tr>
+  <tr>
+    <td><%= l(:label_vacation_left) %></td>
+    <td><%= WorkingHours.vacation_days_available() %> <%= l(:label_day_plural) %></td>
   </tr>
 </table>

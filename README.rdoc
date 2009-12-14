@@ -29,5 +29,34 @@ Run the unit tests:
  RAILS_ENV=test rake db:migrate_plugins
  rake test:plugins:units
 
+==Configuration
+=== User pensum
+* set workday hours for a full pensum as WORKDAY_HOURS in app/models/holiday.rb (default 8h)
+* add custom field for user pensum
+** Administration -> Custom fields -> Users -> New custom field
+*** Name: working_hours_pensum
+*** Format: Float
+*** Default value: 1.0
+*** Required: check
+** set working_hours_pensum for each user in Administration -> Users
+
+=== Holidays
+* Admin users can edit holidays using the link on the Working hours page
+
+=== Vacations
+* create vacation issue
+** Subject: <vacation_subject>
+** Assigned to: nobody
+* Note: the shortest vacation time is half a day, i.e. set duration of vacation working hours to WORKDAY_HOURS or WORKDAY_HOURS/2
+* set vacation issue as VACATION_ISSUE_SUBJECT=<vacation_subject> in app/models/working_hours.rb
+* add custom field for user vacation days
+** Administration -> Custom fields -> Users -> New custom field
+*** Name: working_hours_vacation_days
+*** Format: Integer
+*** Default value: 0
+*** Required: check
+** set working_hours_vacation_days for each user in Administration -> Users
+*** vacation days are counted as full days with WORKDAY_HOURS, e.g. if a user with pensum=1.0 has 20 days then a user with pensum=0.5 has 10 days
+
 ==Tips:
 * We collect all customer projects without Redmine project as tickets in a separate project.
