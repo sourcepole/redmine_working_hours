@@ -6,6 +6,8 @@ This plugin provides an additional section on your personal page for tracking yo
 
 ==Features:
 * time tracking with ticket assignment
+* overview of worked and target hours per user
+* remaining vacation days per user
 * iCalendar view
 
 ==Installation:
@@ -57,6 +59,16 @@ Run the unit tests:
 *** Required: check
 ** set working_hours_vacation_days for each user in Administration -> Users
 *** vacation days are counted as full days with WORKDAY_HOURS, e.g. if a user with pensum=1.0 has 20 days then a user with pensum=0.5 has 10 days
+
+== Usage
+* My Page
+** Personalize this page -> Add "Working Hours"
+** start issue by clicking on its link
+** clicking a new issue will stop the currently running issue
+* Vacations
+** Working hours -> Add -> Vacation
+*** Select date range and save. This will create a vacation working hour for each day (weekends and holidays will be automatically filtered).
+** for half day vacations select the appropriate option when editing an existing vacation working hour
 
 ==Tips:
 * We collect all customer projects without Redmine project as tickets in a separate project.
