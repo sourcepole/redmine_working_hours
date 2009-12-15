@@ -29,7 +29,7 @@
                        
     <%= link_to l(:button_clear), {}, :class => 'icon icon-reload'  %>
 
-    <%= link_to l(:button_add), {:action => 'new'}, :class => 'icon icon-add' %>
+    <%= link_to l(:button_add), {:action => 'new', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]}, :class => 'icon icon-add' %>
     <%= link_to l(:label_export_to)+' CSV', {:overwrite_params => { :export => 'csv' }}, :class => 'icon icon-csv' %>
     <%= link_to 'iCalendar', {:overwrite_params => { :export => 'ics', :key => User.current.rss_key }}, :class => 'icon icon-ics' %>
 </div>

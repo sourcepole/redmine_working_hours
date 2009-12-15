@@ -56,15 +56,53 @@ class WorkingHoursController < ApplicationController
   end
 
   def create
-    @working_hours = WorkingHours.new(params[:working_hours])
-    @working_hours.workday ||= Time.now
-    working_hours_calculations
-    if @working_hours.save
-      flash[:notice] = 'WorkingHours was successfully created.'
-      redirect_to :action => 'index'
+    if params[:is_vacation] == '1'
+      t = params[:vacation_start_date].to_date
+      end_date = params[:vacation_end_date].to_date
+      num_days = (end_date - t + 1).to_int
+      num_days.times do
+        if t.wday != 0 and t.wday != 6
+          # not a weekend
+          working_hours = WorkingHours.new(params[:working_hours])
+          working_hours.break = 0
+          working_hours.workday = t
+          working_hours.starting = t.to_time
+
+          holiday = Holiday.find_by_day(t)
+          if holiday.nil?
+            # working day
+            working_hours.ending = working_hours.starting + Holiday::WORKDAY_HOURS * 3600
+            working_hours.save
+          else
+            # holiday on working day
+            delta_hours = Holiday::WORKDAY_HOURS - holiday.hours
+            if delta_hours > 0.0
+              working_hours.ending = working_hours.starting + delta_hours * 3600
+              working_hours.save
+            end
+          end
+        end
+      
+        t += 1
+      end
+
+      flash[:notice] = 'Vacation was successfully created.'
+      redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
     else
-      render :action => 'new'
+      @working_hours = WorkingHours.new(params[:working_hours])
+      @working_hours.workday ||= Time.now
+      working_hours_calculations
+      if @working_hours.save
+        flash[:notice] = 'WorkingHours was successfully created.'
+        redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
+      else
+        render :action => 'new'
+      end
     end
+
+  rescue Exception => e
+    flash[:error] = 'Could not update WorkingHours: ' + e
+    redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
   end
 
   def edit
@@ -110,14 +148,25 @@ class WorkingHoursController < ApplicationController
   end
 
   def working_hours_calculations
-    case params['subform']
-      when 'Timestamps'
-        if params['running'] && params[:working_hours][:ending].empty?
-          @working_hours.ending = nil
-        end
-      when 'Duration'
-        @working_hours.starting = Time.local(@working_hours.workday.year, @working_hours.workday.month, @working_hours.workday.day)
-        @working_hours.ending = @working_hours.starting + params['duration'].to_f * 3600
+    if params[:is_vacation] == '1'
+      @working_hours.starting = params[:vacation_date].to_time
+      duration = Holiday::WORKDAY_HOURS * 3600
+      if params[:vacation_length] == 'vacation_half_day'
+        duration /= 2.0
+      end
+      @working_hours.ending = @working_hours.starting + duration
+      @working_hours.workday = params[:vacation_date]
+      @working_hours.break = 0
+    else
+      case params['subform']
+        when 'Timestamps'
+          if params['running'] && params[:working_hours][:ending].empty?
+            @working_hours.ending = nil
+          end
+        when 'Duration'
+          @working_hours.starting = Time.local(@working_hours.workday.year, @working_hours.workday.month, @working_hours.workday.day)
+          @working_hours.ending = @working_hours.starting + params['duration'].to_f * 3600
+      end
     end
   end
 

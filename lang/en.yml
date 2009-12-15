@@ -9,6 +9,8 @@ label_holidays_new: Add holiday
 label_holidays_edit: Edit holidays
 label_vacation: Vacation
 label_vacation_left: Remaining vacations
+label_half_day: Half day
+label_full_day: Full day
 
 label_this_month_current: this month (current)
 label_this_month_target: this month (target)
