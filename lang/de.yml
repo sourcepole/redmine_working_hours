@@ -11,6 +11,9 @@ label_vacation: Ferien
 label_vacation_left: Verbleibende Ferien
 label_half_day: Halber Tag
 label_full_day: Ganzer Tag
+label_working_hours_snapshots: Arbeitszeit Zwischenstände
+label_working_hours_snapshots_new: Arbeitszeit Zwischenstand hinzufügen
+label_working_hours_snapshots_edit: Arbeitszeit Zwischenstände bearbeiten
 
 label_this_month_current: aktueller Monat (Ist)
 label_this_month_target: aktueller Monat (Soll)
@@ -23,3 +26,6 @@ field_ending: Ende
 field_break: Pause
 
 field_day: Datum
+field_total: Ist
+field_target: Soll
+field_vacation_days_used: Benutzte Ferientage

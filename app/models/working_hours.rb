@@ -48,10 +48,18 @@ class WorkingHours < ActiveRecord::Base
     rec.workday = starting #? date only
     rec
   end
-  
+
   def self.total_minutes(start_date, end_date)
+    minutes = 0
+    
+    snapshot = WorkingHoursSnapshot.find_current(User.current, start_date, end_date)
+    unless snapshot.nil?
+      start_date = snapshot.date
+      minutes = snapshot.total
+    end
+
     working_hours = find :all, :conditions => ["user_id=? AND workday>=? AND workday<=?", User.current.id, start_date, end_date]
-    working_hours.inject(0) { |sum, j| sum + j.minutes }
+    working_hours.inject(minutes) { |sum, j| sum + j.minutes }
   end
   
   def self.total_minutes_month(month, year = nil)
@@ -66,7 +74,8 @@ class WorkingHours < ActiveRecord::Base
   end
   
   def self.total_minutes_day(date)
-    total_minutes(date, date)
+    working_hours = find :all, :conditions => ["user_id=? AND workday=?", User.current.id, date]
+    working_hours.inject(0) { |sum, j| sum + j.minutes }
   end
 
   def self.total_minutes_today()
@@ -115,8 +124,15 @@ class WorkingHours < ActiveRecord::Base
   def self.vacation_days_used()
     start_date = Time.local(Time.now.year, 1, 1).to_date
     end_date = Date.today
-    working_hours = find :all, :conditions => ["user_id=? AND issue_id=? AND workday>=? AND workday<=?", User.current.id, vacation_issue().id, start_date, end_date]
     days_used = 0.0
+    
+    snapshot = WorkingHoursSnapshot.find_current(User.current, start_date, end_date)
+    unless snapshot.nil?
+      start_date = snapshot.date
+      days_used = snapshot.vacation_days
+    end
+    
+    working_hours = find :all, :conditions => ["user_id=? AND issue_id=? AND workday>=? AND workday<=?", User.current.id, vacation_issue().id, start_date, end_date]
     working_hours.each do |wh|
       if wh.minutes/60.0 > Holiday::WORKDAY_HOURS/2.0
         days_used += 1.0

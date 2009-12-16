@@ -15,6 +15,13 @@ class Holiday < ActiveRecord::Base
 
   def self.target_minutes(start_date, end_date)
     minutes = 0
+    
+    snapshot = WorkingHoursSnapshot.find_current(User.current, start_date, end_date)
+    unless snapshot.nil?
+      start_date = snapshot.date
+      minutes = snapshot.target
+    end
+    
     t = start_date
     num_days = (end_date - start_date + 1).to_int
     num_days.times do

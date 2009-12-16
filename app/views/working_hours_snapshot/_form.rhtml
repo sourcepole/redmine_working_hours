@@ -1,0 +1,17 @@
+<%= error_messages_for 'working_hours_snapshots' %>
+
+<% if @users.nil? %>
+<%= f.hidden_field 'user_id' %>
+<% end %>
+
+<p><label for="snapshot_user_id"><%= l(:field_user) %></label>
+<% if @users.nil? %>
+  <%= User.find(@snapshot.user_id).name %>
+<% else %>
+  <%= f.collection_select :user_id, @users, :id, :name, {:include_blank => false} %>
+<% end %>
+</p>
+<p><%= f.text_field :date, :size => 10, :value => @snapshot.date.to_date.to_formatted_s(:db) %><%= calendar_for('snapshot_date') %></p>
+<p><%= f.text_field :total, :size => 5, :value => @snapshot.total %> min</p>
+<p><%= f.text_field :target, :size => 5, :value => @snapshot.target %> min</p>
+<p><%= f.text_field :vacation_days, :size => 5, :value => @snapshot.vacation_days %> d</p>

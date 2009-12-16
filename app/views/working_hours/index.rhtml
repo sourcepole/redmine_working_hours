@@ -1,7 +1,8 @@
 <h2><%=l(:label_working_hours)%></h2>
 
 <% if User.current.admin? %>
-  <p><%= link_to l(:label_holidays_edit), {:controller => 'holiday', :action => 'index'}, :class => 'icon icon-ics' %></p>
+  <p><%= link_to l(:label_holidays_edit), {:controller => 'holiday', :action => 'index'}, :class => 'icon icon-ics' %>
+  <%= link_to l(:label_working_hours_snapshots_edit), {:controller => 'working_hours_snapshot', :action => 'index'}, :class => 'icon icon-time' %></p>
 <% end %>
 
 <% form_tag({ :action => 'index' }, :id => 'query_form') do %>

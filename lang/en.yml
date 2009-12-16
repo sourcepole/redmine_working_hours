@@ -11,6 +11,9 @@ label_vacation: Vacation
 label_vacation_left: Remaining vacations
 label_half_day: Half day
 label_full_day: Full day
+label_working_hours_snapshots: Working hours snapshots
+label_working_hours_snapshots_new: Add working hours snapshot
+label_working_hours_snapshots_edit: Edit working hours snapshots
 
 label_this_month_current: this month (current)
 label_this_month_target: this month (target)
@@ -23,3 +26,6 @@ field_ending: End
 field_break: Break
 
 field_day: Date
+field_total: Current
+field_target: Target
+field_vacation_days_used: Used vacation days
