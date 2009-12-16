@@ -292,6 +292,18 @@ class WorkingHoursController < ApplicationController
       export << "ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n"
       export << "END:VEVENT\n\n"
     end
+    
+    holidays = Holiday.find :all, :conditions => [ "day>=? AND day<=?", params[:begindate], params[:enddate] ]
+    holidays.each do |holiday|
+      export << "BEGIN:VEVENT\n"
+      date = holiday.day
+      export << "DTSTART;VALUE=DATE:#{date.year}#{date.month}#{date.mday}\n"
+      date = holiday.day + 1
+      export << "DTEND;VALUE=DATE:#{date.year}#{date.month}#{date.mday}\n"
+      export << "SUMMARY:holiday\n"
+      export << "END:VEVENT\n\n"      
+    end
+    
     export << "END:VCALENDAR\n"
     export.rewind
     send_data(export.read, :type => 'text/calendar', :filename => 'export.ics')    
