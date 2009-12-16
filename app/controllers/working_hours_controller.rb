@@ -163,6 +163,11 @@ class WorkingHoursController < ApplicationController
           if params['running'] && params[:working_hours][:ending].empty?
             @working_hours.ending = nil
           end
+          if @working_hours.starting.hour < WorkingHours::WORKDAY_CHANGE_HOUR
+            @working_hours.workday = @working_hours.starting.to_date - 1
+          else
+            @working_hours.workday = @working_hours.starting.to_date
+          end
         when 'Duration'
           @working_hours.starting = Time.local(@working_hours.workday.year, @working_hours.workday.month, @working_hours.workday.day)
           @working_hours.ending = @working_hours.starting + params['duration'].to_f * 3600

@@ -7,8 +7,6 @@
 <% is_vacation = (@working_hours.issue_id == WorkingHours.vacation_issue().id) %>
 <%= hidden_field_tag "is_vacation", is_vacation ? 1 : 0 %>
 
-<p><%= f.text_field :workday, :size => 10, :value => @working_hours.workday.to_date.to_formatted_s(:db) %><%= calendar_for('working_hours_workday') %>
-
 <% unless is_vacation %>
 <div id="project_issue_select">
   <p><label for="working_hours_project_id"><%= l(:field_project) %></label>
@@ -85,6 +83,7 @@ function(element, value)
   }" %>
 
   <div id="duration" style="display:none">
+    <p><%= f.text_field :workday, :size => 10, :value => @working_hours.workday.to_date.to_formatted_s(:db) %><%= calendar_for('working_hours_workday') %>
     <p><label for="working_hours_duration">Hours</label>
     <%= text_field_tag 'duration', @duration, "size" => 5  %></p>
   </div>

@@ -11,6 +11,7 @@ class WorkingHours < ActiveRecord::Base
   
   COMMON_TASKS_USER = 'admin'
   VACATION_ISSUE_SUBJECT = 'Ferien'
+  WORKDAY_CHANGE_HOUR = 5
 
   def self.find_current(user)
     find(:first, :conditions => ["ending IS NULL AND user_id=?", user.id], :order => "#{self.table_name}.starting DESC")

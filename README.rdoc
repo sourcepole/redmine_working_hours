@@ -60,6 +60,14 @@ Run the unit tests:
 ** set working_hours_vacation_days for each user in Administration -> Users
 *** vacation days are counted as full days with WORKDAY_HOURS, e.g. if a user with pensum=1.0 has 20 days then a user with pensum=0.5 has 10 days
 
+=== Workday hours snapshots
+A snapshot containing used vacation days, current and target times can be created for a user. This is used if a user starts working in the middle of the year or his pensum changes.
+Working hours overview calculations are based on the latest user snapshot or the beginning of the year if no snapshots are found.
+
+=== Time of workday change
+* issues starting before this time will be assigned to the previous workday
+* set time of workday change as WORKDAY_CHANGE_HOUR on app/models/working_hours.rb (default 5 = 5:00:00)
+
 == Usage
 * My Page
 ** Personalize this page -> Add "Working Hours"
