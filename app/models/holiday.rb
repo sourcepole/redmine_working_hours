@@ -8,7 +8,9 @@ class Holiday < ActiveRecord::Base
     custom_field = CustomField.find_by_name('working_hours_pensum')
     unless custom_field.nil?
       cv = CustomValue.find(:first, :conditions => ["custom_field_id=? AND customized_id=?", custom_field.id, User.current.id])
-      pensum = cv.value.to_f
+      unless cv.nil?
+        pensum = cv.value.to_f
+      end
     end
     pensum
   end

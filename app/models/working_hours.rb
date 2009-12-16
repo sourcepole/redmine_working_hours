@@ -112,7 +112,9 @@ class WorkingHours < ActiveRecord::Base
     custom_field = CustomField.find_by_name('working_hours_vacation_days')
     unless custom_field.nil?
       cv = CustomValue.find(:first, :conditions => ["custom_field_id=? AND customized_id=?", custom_field.id, User.current.id])
-      vacation_days = cv.value.to_i
+      unless cv.nil?
+        vacation_days = cv.value.to_i
+      end
     end
     vacation_days
   end
