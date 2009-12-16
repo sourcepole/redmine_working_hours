@@ -26,6 +26,7 @@ field_ending: End
 field_break: Break
 
 field_day: Date
+field_date: Date
 field_total: Current
 field_target: Target
-field_vacation_days_used: Used vacation days
+field_vacation_days: Used vacation days

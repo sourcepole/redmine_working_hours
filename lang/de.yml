@@ -26,6 +26,7 @@ field_ending: Ende
 field_break: Pause
 
 field_day: Datum
+field_date: Datum
 field_total: Ist
 field_target: Soll
-field_vacation_days_used: Benutzte Ferientage
+field_vacation_days: Benutzte Ferientage
