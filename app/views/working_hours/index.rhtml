@@ -48,25 +48,34 @@
 
 <table>
   <tr>
-    <td><%= l(:label_today) %></td>
+    <td><%= l(:label_month) %></td>
+  </tr>
+  <tr>
+    <td>
+      <table class='list'>
+        <thead>
+          <th><%= l(:field_total) %></th>
+          <th><%= l(:field_target) %></th>
+          <th><%= l(:label_target_remaining) %></th>
+          <th><%= l(:label_diff_until_now) %></th>
+          <th><%= l(:label_diff_prev_month) %></th>
+        </thead>
+        <tr>
+          <td><%= "#{'%.1f' % (WorkingHours.total_minutes_month(Time.now.month)/60.0)}h" %></td>
+          <td><%= "#{'%.1f' % (Holiday.target_minutes_month(Time.now.month)/60.0)}h" %></td>
+          <td><%= "#{'%.1f' % (-WorkingHours.diff_minutes_until_end_of_month(Time.now.month)/60.0)}h" %></td>
+          <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Date.today - 1)/60.0)}h" %></td>
+          <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Time.local(Time.now.year, Time.now.month, 1).to_date - 1)/60.0)}h" %></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><%= l(:label_today_capitalized) %></td>
     <td><%= duration(WorkingHours.total_minutes_today) %></td>
-  </tr>
-  <tr>
-    <td><%= l(:label_this_month_current) %></td>
-    <td><%= "#{'%.1f' % (WorkingHours.total_minutes_month(Time.now.month)/60.0)}h" %></td>
-  </tr>
-  <tr>
-    <td><%= l(:label_this_month_target) %></td>
-    <td><%= "#{'%.1f' % (Holiday.target_minutes_month(Time.now.month)/60.0)}h" %></td>
-  </tr>
-  <tr>
-    <td><%= l(:label_diff_until_now) %></td>
-    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_now()/60.0)}h" %></td>
-  </tr>
-  <tr>
-    <% last_day_of_last_month = Time.local(Time.now.year, Time.now.month, 1).to_date - 1 %>
-    <td><%= l(:label_diff_until_date, last_day_of_last_month+1) %></td>
-    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(last_day_of_last_month)/60.0)}h" %></td>
   </tr>
   <tr>
     <td><%= l(:label_vacation_left) %></td>

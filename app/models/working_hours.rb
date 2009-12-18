@@ -65,12 +65,7 @@ class WorkingHours < ActiveRecord::Base
   
   def self.total_minutes_month(month, year = nil)
     start_date = Time.local(year || Time.now.year, month, 1).to_date
-    # TODO: better end of month method?
-    if month == 12
-      end_date = Time.local(year || Time.now.year, 12, 31).to_date
-    else
-      end_date = Time.local(year || Time.now.year, (month+1), 1).to_date - 1
-    end
+    end_date = last_day_of_month(month, year)
     total_minutes(start_date, end_date)
   end
   
@@ -98,6 +93,11 @@ class WorkingHours < ActiveRecord::Base
     total_minutes - target_minutes
   end
 
+  def self.diff_minutes_until_end_of_month(month, year = nil)
+    end_date = last_day_of_month(month, year)
+    diff_minutes_until_day(end_date)
+  end
+  
   def self.diff_minutes_until_day(end_date)
     target_minutes = Holiday.target_minutes_until_day(end_date)
     total_minutes = total_minutes_until_day(end_date)
@@ -252,5 +252,15 @@ class WorkingHours < ActiveRecord::Base
     end
     sql = '1=1' if sql == '' #avoid empty where clause
     [sql, args]
+  end
+  
+  def self.last_day_of_month(month, year = nil)
+    # TODO: better end of month method?
+    if month == 12
+      end_date = Time.local(year || Time.now.year, 12, 31).to_date
+    else
+      end_date = Time.local(year || Time.now.year, (month+1), 1).to_date - 1
+    end
+    end_date
   end
 end

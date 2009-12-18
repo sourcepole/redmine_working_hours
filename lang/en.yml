@@ -9,16 +9,16 @@ label_holidays_new: Add holiday
 label_holidays_edit: Edit holidays
 label_vacation: Vacation
 label_vacation_left: Remaining vacations
+label_today_capitalized: Today
 label_half_day: Half day
 label_full_day: Full day
 label_working_hours_snapshots: Working hours snapshots
 label_working_hours_snapshots_new: Add working hours snapshot
 label_working_hours_snapshots_edit: Edit working hours snapshots
 
-label_this_month_current: this month (current)
-label_this_month_target: this month (target)
-label_diff_until_now: Difference until today
-label_diff_until_date: Difference until %s
+label_target_remaining: Target remaining
+label_diff_until_now: Diff. until today
+label_diff_prev_month: Diff. last month
 
 field_workday: Workday
 field_starting: Start
