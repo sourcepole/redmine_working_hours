@@ -64,6 +64,8 @@ class WorkingHoursController < ApplicationController
         if t.wday != 0 and t.wday != 6
           # not a weekend
           working_hours = WorkingHours.new(params[:working_hours])
+          working_hours.project_id = WorkingHours.vacation_issue().project_id
+          working_hours.issue_id = WorkingHours.vacation_issue().id
           working_hours.break = 0
           working_hours.workday = t
           working_hours.starting = t.to_time
@@ -96,7 +98,7 @@ class WorkingHoursController < ApplicationController
         flash[:notice] = 'WorkingHours was successfully created.'
         redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
       else
-        render :action => 'new'
+        redirect_to :action => 'new'
       end
     end
 
@@ -138,13 +140,13 @@ class WorkingHoursController < ApplicationController
       flash[:notice] = 'WorkingHours was successfully updated.'
       redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
     else
-      render :action => 'edit'
+      redirect_to :action => 'edit', :id => params[:id]
     end
   end
 
   def destroy
     WorkingHours.find(params[:id]).destroy
-    redirect_to :action => 'index'
+    redirect_to :action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]
   end
 
   def working_hours_calculations

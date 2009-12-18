@@ -21,34 +21,13 @@
     "Element.hide('project_issue_select');
     Element.hide('issue_edit');
     Element.show('vacation_edit');
-    this.form.is_vacation.value = 1;
-    this.form.working_hours_project_id.value = #{WorkingHours.vacation_issue().project_id};
-    this.form.working_hours_issue_id.value = #{WorkingHours.vacation_issue().id};"
+    this.form.is_vacation.value = 1;"
   %></p>
   <% end %>
 </div>
 
 <%= observe_field 'working_hours_project_id', :update => 'issues_list', :url => {:action => 'update_edit_issues'}, :with => "'change_project_id=' + encodeURIComponent(value)" %>
 <% end %>
-
-<%= javascript_tag "new Form.Element.EventObserver('working_hours_issue_id',
-function(element, value)
-{
-  if (value == #{WorkingHours.vacation_issue().id})
-  {
-    Element.hide('project_issue_select');
-    Element.hide('issue_edit');
-    Element.show('vacation_edit');
-    element.form.is_vacation.value = 1;
-  }
-  else
-  {
-    Element.show('project_issue_select');
-    Element.show('issue_edit');
-    Element.hide('vacation_edit');
-    element.form.is_vacation.value = 0;
-  }
-})" %>
 
 <hr/>
 

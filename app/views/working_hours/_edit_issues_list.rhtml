@@ -1,2 +1,21 @@
 <p><label for="working_hours_issue_id"><%= l(:field_issue) %></label>
 <%= collection_select :working_hours, :issue_id, @issues, :id, :subject, {:include_blank => true} %>
+
+<%= javascript_tag "new Form.Element.EventObserver('working_hours_issue_id',
+function(element, value)
+{
+  if (value == #{WorkingHours.vacation_issue().id})
+  {
+    Element.hide('project_issue_select');
+    Element.hide('issue_edit');
+    Element.show('vacation_edit');
+    element.form.is_vacation.value = 1;
+  }
+  else
+  {
+    Element.show('project_issue_select');
+    Element.show('issue_edit');
+    Element.hide('vacation_edit');
+    element.form.is_vacation.value = 0;
+  }
+})" %>
