@@ -137,10 +137,14 @@ class WorkingHours < ActiveRecord::Base
     
     working_hours = find :all, :conditions => ["user_id=? AND issue_id=? AND workday>=? AND workday<=?", User.current.id, vacation_issue().id, start_date, end_date]
     working_hours.each do |wh|
-      if wh.minutes/60.0 > Holiday::WORKDAY_HOURS/2.0
-        days_used += 1.0
-      else
-        days_used += 0.5
+      if wh.workday.wday != 0 and wh.workday.wday != 6
+        # not a weekend
+        if wh.minutes/60.0 > Holiday::WORKDAY_HOURS/2.0
+          days_used += 1.0
+        else
+          days_used += 0.5
+        end
+        # TODO: vacation on holidays are still counted
       end
     end
     days_used
