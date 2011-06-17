@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class HolidayTest < Test::Unit::TestCase
+class HolidayTest < ActiveSupport::TestCase
   fixtures :holidays
   
   def setup
@@ -27,9 +27,6 @@ class HolidayTest < Test::Unit::TestCase
     assert_equal 9840, minutes_a
     minutes_b = Holiday.target_minutes_month(1, 2009)
     assert_equal minutes_a, minutes_b
-    
-    minutes = Holiday.target_minutes_until_day(Time.local(2009, 2, 15).to_date)
-    assert_equal 14640, minutes
     
     minutes_a = Holiday.target_minutes_until_day(Date.today)
     minutes_b = Holiday.target_minutes_until_now()

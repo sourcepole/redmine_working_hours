@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class WorkingHoursTest < Test::Unit::TestCase
+class WorkingHoursTest < ActiveSupport::TestCase
   fixtures :working_hours, :users, :issues, :projects
 
   def setup

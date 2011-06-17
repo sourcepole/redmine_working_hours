@@ -11,14 +11,17 @@ function timer_format(seconds) {
 function timer(element, startTime) {
   element.innerHTML=timer_format((tS()-startTime)/1000);
 }
+document.observe("dom:loaded", function() {
+  $($('workinghours-box').parentNode).id = "workinghours";
+});
 var curtimer=null;
 </script>
 
 <h3><%=l(:label_working_hours)%></h3>
 
-<div class="box">
+<div id="workinghours-box" class="box">
 <% @cur_entry ||= WorkingHours.find_current(User.current) %>
-<% user_projects_by_root = User.current.projects.find(:all, :include => :parent).group_by(&:root) %>
+<% user_projects_by_root = User.current.projects.find(:all).group_by(&:root) %>
 <% user_projects_by_root.keys.sort.each do |root| %>
   <% issues = WorkingHours.task_issues(root) %>
     <%= link_to_remote h(root.name), {:update => "workinghours", :url => {:controller => 'working_hours', :action => 'startstop', :project_id => root.id}},
@@ -67,3 +70,5 @@ var curtimer=null;
 <% content_for :header_tags do %>
     <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
 <% end %>
+
+</div>

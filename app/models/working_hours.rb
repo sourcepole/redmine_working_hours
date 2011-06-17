@@ -1,4 +1,6 @@
 class WorkingHours < ActiveRecord::Base
+  unloadable if RAILS_ENV == 'development' # fix "Can't dup NilClass" on save in development
+
   belongs_to :user
   belongs_to :project
   belongs_to :issue
@@ -169,7 +171,7 @@ class WorkingHours < ActiveRecord::Base
   def update_time_entry
     if self.time_entry.nil?
       unless ending.nil?
-        activity = Enumeration.default('ACTI') || Enumeration.find_by_opt('ACTI')
+        activity = Enumeration.find(:first, :conditions => {:type => 'TimeEntryActivity', :is_default => true}, :order => 'position') || Enumeration.find_by_type('TimeEntryActivity')
 
         # TODO: does not work in this version
 #        new_time_entry = project.time_entries.build(:issue => issue, :user => user, :spent_on => workday)
