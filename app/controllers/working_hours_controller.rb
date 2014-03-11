@@ -15,8 +15,14 @@ class WorkingHoursController < ApplicationController
     end
     params[:begindate] = Date.today if params[:begindate].to_date > Date.today
     params[:enddate] = params[:begindate] if params[:enddate].to_date < params[:begindate].to_date
-    conditions = ["user_id=? AND workday >= ? AND workday <= ?",
-      User.current.id, params[:begindate], params[:enddate]]
+    user_id = params[:userid] || User.current.id
+    conditions = if user_id != 'all'
+      ["user_id=? AND workday >= ? AND workday <= ?",
+      user_id, params[:begindate], params[:enddate]]
+    else
+      ["workday >= ? AND workday <= ?",
+      params[:begindate], params[:enddate]]
+    end
     params[:filter] ||= {}
     if !params[:filter][:issue_id].nil? && !params[:filter][:issue_id].empty? then
         conditions.first << " AND issue_id=?"
