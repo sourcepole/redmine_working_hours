@@ -1,16 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'working_hours_controller'
+require File.expand_path('../../test_helper', __FILE__)
 
-# Re-raise errors caught by the controller.
-class WorkingHoursController; def rescue_action(e) raise e end; end
-
-class WorkingHoursControllerTest < Test::Unit::TestCase
-  def setup
-    @controller = WorkingHoursController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-
+class WorkingHoursControllerTest < ActionController::TestCase
   # Replace this with your real tests.
   def test_truth
     assert true

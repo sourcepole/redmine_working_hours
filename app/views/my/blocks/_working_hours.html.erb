@@ -1,0 +1,85 @@
+<% content_for :header_tags do %>
+  <script type="text/javascript">
+    function tS() { x = new Date(); x.setTime(x.getTime()); return x; }
+    function lZ(x) { return (x > 9) ? x : '0' + x; }
+    function timer_format(seconds) {
+      var str = '';
+      if (seconds > 86400) {
+        str += Math.floor(seconds / (24 * 3600)) + "d ";
+      }
+      if (seconds > 3600) {
+        str += Math.floor((seconds % (24 * 3600)) / 3600) + "h ";
+      }
+      str += Math.floor((seconds % 3600) / 60) + "' " + lZ(Math.floor(seconds % 60)) + "''";
+      return str;
+    }
+    function timer(element, startTime) {
+      element.html(timer_format((tS() - startTime) / 1000));
+    }
+
+    var curtimer = null;
+  </script>
+
+  <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
+<% end %>
+
+<h3><%= l('.label_working_hours') %></h3>
+
+<div id="workinghours-box" class="box">
+  <% @cur_entry ||= WorkingHours.find_current(User.current) %>
+
+  <% projects = User.current.projects.find(:all) %>
+  <%= render_project_nested_lists(projects) do |project|
+    s = ''
+    s << link_to( h(project.name), startstop_working_hours_path(:project_id => project.id), :remote => true,
+                  :class => "icon icon-time#{'-running' if !@cur_entry.nil? && @cur_entry.running? && (@cur_entry.issue_id.nil? || @cur_entry.issue_id == 0) && project.id == @cur_entry.project_id} working_project" )
+
+    issues = WorkingHours.task_issues(project)
+    if issues.size > 0
+      s << "&nbsp;"
+      s << link_to_function('+/-', "$('#tasks#{project.id}').toggle()")
+
+      s << "<ul id=\"tasks#{project.id}\" class=\"projects working_tasks\" style=\"display:none\">"
+      for issue in issues
+        s << "<li>"
+        s << link_to( "##{issue.id} #{h(issue.subject)}", startstop_working_hours_path(:project_id => issue.project_id, :issue_id => issue.id), :remote => true,
+                      :class => "icon icon-time#{'-running' if !@cur_entry.nil? && @cur_entry.running? && @cur_entry.issue_id == issue.id}" )
+        s << "</li>"
+      end
+      s << "</ul>"
+    end
+
+    s.html_safe
+  end %>
+
+  <hr/>
+
+  <% for issue in WorkingHours.recent_issues(User.current).reverse %>
+    <%= link_to "##{issue.id} #{h(issue.subject)}", startstop_working_hours_path(:project_id => issue.project_id, :issue_id => issue.id), :remote => true,
+                :class => "icon icon-time#{'-running' if !@cur_entry.nil? && @cur_entry.running? && @cur_entry.issue_id == issue.id}" %>
+    <br/>
+  <% end %>
+
+  <%= javascript_tag "clearInterval(curtimer);" %>
+  <% if !@cur_entry.nil? && @cur_entry.running? %>
+    <%= form_tag break_working_hours_path, :remote => true do %>
+      <%= submit_tag 'Stop' %>
+    <% end %>
+    <span id="timer">&nbsp;</span>
+
+    <%= javascript_tag "curtimer = setInterval(\"timer($('#timer'), new Date('#{@cur_entry.starting.strftime("%m/%d/%Y %H:%M:%S %z")}'))\", 1000);" %>
+  <% end %>
+
+  <% if !@cur_entry.nil? && @cur_entry.running? %>
+    <p/>
+    <%= form_for @cur_entry, :url => update_comments_working_hour_path(:id => @cur_entry), :remote => true do |f| %>
+      <label for="working_hours_comments"><%= l(:field_comments) %></label><br>
+      <%= f.text_area :comments, "cols" => 40, "rows" => 2 %><br>
+      <%= submit_tag l(:button_save) %>
+    <% end %>
+  <% end %>
+
+  <p class="small">
+    <%= link_to l(:label_working_hours_list), working_hours_path %>
+  </p>
+</div>

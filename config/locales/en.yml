@@ -1,4 +1,6 @@
 en:
+  working_hours: Working hours
+
   label_working_hours: Working hours
   label_working_hours_list: View working hours
   label_working_hours_new: Add working hours

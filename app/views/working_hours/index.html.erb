@@ -1,0 +1,15 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
+<% end %>
+
+<h2><%=l(:label_working_hours)%></h2>
+
+<div class="contextual">
+  <%= link_to l(:button_add), new_working_hour_path, :class => 'icon icon-add' %>
+</div>
+
+<% if @working_hours.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'working_hours/list', :locals => {:working_hours => @working_hours} %>
+<% end %>

@@ -17,4 +17,5 @@ module WorkingHoursHelper
     include_date = (timestamp.to_date != workday)
     format_time(timestamp, include_date)
   end
+
 end

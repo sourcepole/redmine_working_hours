@@ -1,8 +1,0 @@
-<h2><%= l(:label_working_hours) %></h2>
-
-<% labelled_tabular_form_for :working_hours, @working_hours, :url => {:action => 'update', :id => @working_hours, :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]} do |f| %>
-  <%= render :partial => 'form', :locals => {:f => f, :edit => true} %>
-  <%= submit_tag l(:button_save) %>
-<% end %>
-
-<p><%= link_to l(:button_back), {:action => 'index', :begindate => params[:begindate], :enddate => params[:enddate], :filter => params[:filter]} %></p>

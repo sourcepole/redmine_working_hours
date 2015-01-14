@@ -1,3 +1,9 @@
-.icon-time-running  { background-image: url(/plugin_assets/redmine_working_hours/images/time-running.gif); }
-.icon-csv { background-image:url(/plugin_assets/redmine_working_hours/images/csv.png); }
-.icon-ics { background-image:url(/images/calendar.png); }
+.icon-time-running { background-image: url(/plugin_assets/redmine_working_hours/images/time-running.gif); }
+.icon-csv { background-image: url(/plugin_assets/redmine_working_hours/images/csv.png); }
+.icon-ics { background-image: url(/images/calendar.png); }
+
+a.working_project { font-weight: bolder; }
+
+table.list.working_hours th, table.list.working_hours td { text-align: left; }
+
+.edit_working_hours textarea { width: inherit; }

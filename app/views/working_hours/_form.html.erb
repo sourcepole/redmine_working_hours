@@ -1,0 +1,77 @@
+<% content_for :header_tags do %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('select#working_hours_project_id').change(function() {
+        $.ajax({
+          url: "<%= project_issues_working_hours_path %>",
+          data: {
+            project_id: $(this).val()
+          },
+          dataType: "script"
+        });
+      });
+
+      $("input[name='subform']").change(function() {
+        var showTimestamps = $(this).val() == 'Timestamps';
+        $('#timestamps_subform').toggle(showTimestamps);
+        $('#duration_subform').toggle(!showTimestamps);
+      });
+
+      $('input#working_hours_ending').bind('change keyup', function() {
+        $('input#running').prop('checked', $(this).val().length == 0);
+      });
+
+      $('input#running').change(function() {
+        if ($(this).is(':checked')) {
+          $('input#working_hours_ending').val("");
+        }
+        else {
+          $('input#working_hours_ending').val("<%= @working_hours.ending.nil? ? "" : @working_hours.ending.strftime("%Y-%m-%d %H:%M:%S") %>");
+        }
+      })
+    });
+  </script>
+
+  <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
+<% end %>
+
+<%= error_messages_for 'working_hours' %>
+
+<div class="box tabular">
+  <p>
+    <%= label_tag 'working_hours_project_id', l(:field_project) %>
+    <%= f.collection_select :project_id, User.current.projects.order(:name), :id, :name, {:include_blank => false} %>
+  </p>
+  <p>
+    <%= label_tag 'working_hours_issue_id', l(:field_issue) %>
+    <%= f.collection_select :issue_id, @issues, :id, :subject, {:include_blank => true} %>
+  </p>
+
+  <hr/>
+
+  <%= radio_button_tag 'subform', 'Timestamps', true %> <%= l(:label_timestamps) %>
+  <%= radio_button_tag 'subform', 'Duration', false %> <%= l(:label_duration) %>
+
+  <div id="timestamps_subform">
+    <p><%= f.text_field :starting, :size => 25, :value => @working_hours.starting.strftime("%Y-%m-%d %H:%M:%S") %></p>
+    <p><%= f.text_field 'break', "size" => 5 %></p>
+    <p>
+      <%= f.text_field :ending, :size => 25, :value => (@working_hours.ending.nil? ? '' : @working_hours.ending.strftime("%Y-%m-%d %H:%M:%S")) %>
+      <%= l(:label_running) %><%= check_box_tag 'running', "1", @working_hours.ending.nil? %>
+    </p>
+  </div>
+
+  <div id="duration_subform" style="display:none">
+    <p>
+      <%= f.text_field :workday, :size => 10, :value => @working_hours.workday.to_date.strftime("%Y-%m-%d") %>
+      <%= calendar_for('working_hours_workday') %></p>
+    <p>
+      <%= label_tag 'duration', l(:field_hours) %>
+      <%= text_field_tag 'duration', ('%.1f' % (@working_hours.minutes/60.0)), "size" => 5  %>
+    </p>
+  </div>
+
+  <hr/>
+
+  <p><%= f.text_area 'comments', :cols => 40, :rows => 3  %></p>
+</div>
