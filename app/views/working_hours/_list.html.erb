@@ -1,14 +1,14 @@
 <table class="list working_hours">
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Issue</th>
-      <th>Date</th>
-      <th>Begin</th>
-      <th>Break</th>
-      <th>End</th>
-      <th>Comments</th>
-      <th>Duration</th>
+      <th><%= l(:label_project) %></th>
+      <th><%= l(:label_issue) %></th>
+      <th><%= l(:label_date) %></th>
+      <th><%= l(:field_starting) %></th>
+      <th><%= l(:field_break) %></th>
+      <th><%= l(:field_ending) %></th>
+      <th><%= l(:label_comment) %></th>
+      <th><%= l(:label_duration) %></th>
       <th></th>
       <th></th>
     </tr>
@@ -34,4 +34,4 @@
 
 <p class="pagination"><%= pagination_links_full @working_hour_pages, @working_hour_count %></p>
 
-Total: <%= duration(@minutes_total) %> <%= "(#{'%.1f' % (@minutes_total/60.0)}h)" if @minutes_total >= 60 %>
+<%= l(:label_total_time) %>: <%= duration(@minutes_total) %> <%= "(#{'%.1f' % (@minutes_total/60.0)}h)" if @minutes_total >= 60 %>

@@ -1,1 +1,5 @@
+<% if params[:filter] == '1' %><%# update filter form %>
+$('select#filter_issue_id').replaceWith("<%= escape_javascript(collection_select :filter, :issue_id, @issues, :id, :subject, :prompt => l(:label_all)) %>");
+<% else %><%# update edit form %>
 $('select#working_hours_issue_id').replaceWith("<%= escape_javascript(collection_select :working_hours, :issue_id, @issues, :id, :subject, {:include_blank => true}) %>");
+<% end %>

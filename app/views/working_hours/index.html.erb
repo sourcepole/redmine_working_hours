@@ -1,12 +1,53 @@
 <% content_for :header_tags do %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('input#filter_begindate, input#filter_enddate').keyup(function(e) {
+        if (e.keyCode == 13) {
+          $("#query_form").submit();
+        }
+      });
+
+      $('select#filter_project_id').change(function() {
+        $.ajax({
+          url: "<%= project_issues_working_hours_path(:filter => 1) %>",
+          data: {
+            project_id: $(this).val()
+          },
+          dataType: "script"
+        });
+      });
+
+    });
+  </script>
+
   <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
 <% end %>
-
-<h2><%=l(:label_working_hours)%></h2>
 
 <div class="contextual">
   <%= link_to l(:button_add), new_working_hour_path, :class => 'icon icon-add' %>
 </div>
+
+<h2><%=l(:label_working_hours)%></h2>
+
+<%= form_tag({ :action => 'index'},:method => :get, :id => 'query_form') do %>
+  <div id="query_form_with_buttons" class="hide-when-print">
+    <div id="query_form_content">
+      <fieldset id="filters" class="collapsible">
+        <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+        <div>
+          <%= l(:field_starting) %>: <%= text_field_tag 'filter[begindate]', params[:filter][:begindate], :size => 10 %><%= calendar_for('filter_begindate') %>
+          <%= l(:field_ending) %>: <%= text_field_tag 'filter[enddate]', params[:filter][:enddate], :size => 10 %><%= calendar_for('filter_enddate') %>
+          <%= l(:field_project) %>: <%= collection_select :filter, :project_id, @project_filter_collection, :id, :name, :prompt => l(:label_all), :selected => @project_filter %>
+          <%= l(:field_issue) %>: <%= collection_select :filter, :issue_id, @issue_filter_collection, :id, :subject, :prompt => l(:label_all), :selected => @issue_filter %>
+        </div>
+      </fieldset>
+    </div>
+    <p class="buttons">
+      <%= link_to_function l(:button_apply), '$("#query_form").submit()', :class => 'icon icon-checked' %>
+      <%= link_to l(:button_clear), {}, :class => 'icon icon-reload'  %>
+    </p>
+  </div>
+<% end %>
 
 <% if @working_hours.empty? %>
   <p class="nodata"><%= l(:label_no_data) %></p>

@@ -4,7 +4,27 @@ class WorkingHoursController < ApplicationController
   before_filter :require_login
 
   def index
+    # filter
+    params[:filter] ||= {}
+    params[:filter][:begindate] ||= Date.today
+    params[:filter][:enddate] ||= Date.today
+
+    @project_filter_collection = User.current.projects.order(:name)
+    @project_filter = params[:filter][:project_id].to_s.to_i
+
+    @issue_filter_collection = []
+    unless params[:filter][:project_id].blank?
+      project = User.current.projects.find(params[:filter][:project_id])
+      @issue_filter_collection = WorkingHours.task_issues(project)
+      @issue_filter = params[:filter][:issue_id].to_s.to_i
+    end
+
+    # apply filter
     @working_hours = WorkingHours.where(:user_id => User.current.id).order("starting DESC")
+    @working_hours = @working_hours.where("workday >= ? AND workday <= ?", params[:filter][:begindate], params[:filter][:enddate])
+    @working_hours = @working_hours.where(:project_id => params[:filter][:project_id]) unless params[:filter][:project_id].blank?
+    @working_hours = @working_hours.where(:issue_id => params[:filter][:issue_id]) unless params[:filter][:issue_id].blank?
+
     @minutes_total = @working_hours.inject(0) { |sum, w| sum + w.minutes }
 
     # pagination
@@ -76,8 +96,12 @@ class WorkingHoursController < ApplicationController
   end
 
   def project_issues
-    project = User.current.projects.find(params[:project_id])
-    @issues = WorkingHours.task_issues(project)
+    if params[:project_id].blank?
+      @issues = []
+    else
+      project = User.current.projects.find(params[:project_id])
+      @issues = WorkingHours.task_issues(project)
+    end
   end
 
   private
