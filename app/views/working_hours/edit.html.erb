@@ -1,8 +1,8 @@
 <h2><%= l(:label_working_hours) %></h2>
 
-<%= labelled_form_for @working_hours, :url => working_hour_path(@working_hours) do |f| %>
+<%= labelled_form_for @working_hours, :url => working_hour_path(@working_hours, :filter => params[:filter]) do |f| %>
   <%= render :partial => 'form', :locals => {:f => f} %>
   <%= submit_tag l(:button_save) %>
 <% end %>
 
-<p><%= link_to l(:button_back), working_hours_path %></p>
+<p><%= link_to l(:button_back), working_hours_path(:filter => params[:filter]) %></p>

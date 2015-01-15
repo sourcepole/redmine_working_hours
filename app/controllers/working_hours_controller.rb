@@ -5,25 +5,26 @@ class WorkingHoursController < ApplicationController
 
   def index
     # filter
-    params[:filter] ||= {}
-    params[:filter][:begindate] ||= Date.today
-    params[:filter][:enddate] ||= Date.today
+    filter_params = params[:filter] || {}
+
+    @begindate_filter = filter_params[:begindate] || Date.today
+    @enddate_filter = filter_params[:enddate] || Date.today
 
     @project_filter_collection = User.current.projects.order(:name)
-    @project_filter = params[:filter][:project_id].to_s.to_i
+    @project_filter = filter_params[:project_id].to_s.to_i
 
     @issue_filter_collection = []
-    unless params[:filter][:project_id].blank?
-      project = User.current.projects.find(params[:filter][:project_id])
+    unless filter_params[:project_id].blank?
+      project = User.current.projects.find(filter_params[:project_id])
       @issue_filter_collection = WorkingHours.task_issues(project)
-      @issue_filter = params[:filter][:issue_id].to_s.to_i
+      @issue_filter = filter_params[:issue_id].to_s.to_i
     end
 
     # apply filter
     @working_hours = WorkingHours.where(:user_id => User.current.id).order("starting DESC")
-    @working_hours = @working_hours.where("workday >= ? AND workday <= ?", params[:filter][:begindate], params[:filter][:enddate])
-    @working_hours = @working_hours.where(:project_id => params[:filter][:project_id]) unless params[:filter][:project_id].blank?
-    @working_hours = @working_hours.where(:issue_id => params[:filter][:issue_id]) unless params[:filter][:issue_id].blank?
+    @working_hours = @working_hours.where("workday >= ? AND workday <= ?", @begindate_filter, @enddate_filter)
+    @working_hours = @working_hours.where(:project_id => filter_params[:project_id]) unless filter_params[:project_id].blank?
+    @working_hours = @working_hours.where(:issue_id => filter_params[:issue_id]) unless filter_params[:issue_id].blank?
 
     @minutes_total = @working_hours.inject(0) { |sum, w| sum + w.minutes }
 
@@ -45,7 +46,7 @@ class WorkingHoursController < ApplicationController
     working_hours_calculations
     if @working_hours.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index'
+      redirect_to :action => 'index', :filter => params[:filter]
     else
       @issues = WorkingHours.task_issues(@working_hours.project)
       render :action => 'new'
@@ -63,7 +64,7 @@ class WorkingHoursController < ApplicationController
     working_hours_calculations
     if @working_hours.save
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index'
+      redirect_to :action => 'index', :filter => params[:filter]
     else
       @issues = WorkingHours.task_issues(@working_hours.project)
       render :action => 'edit'
@@ -73,7 +74,7 @@ class WorkingHoursController < ApplicationController
   def destroy
     WorkingHours.find(params[:id]).destroy
     flash[:notice] = l(:notice_successful_delete)
-    redirect_to :action => 'index'
+    redirect_to :action => 'index', :filter => params[:filter]
   end
 
   def update_comments

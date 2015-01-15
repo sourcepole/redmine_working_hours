@@ -24,7 +24,7 @@
 <% end %>
 
 <div class="contextual">
-  <%= link_to l(:button_add), new_working_hour_path, :class => 'icon icon-add' %>
+  <%= link_to l(:button_add), new_working_hour_path(:filter => params[:filter]), :class => 'icon icon-add' %>
 </div>
 
 <h2><%=l(:label_working_hours)%></h2>
@@ -35,8 +35,8 @@
       <fieldset id="filters" class="collapsible">
         <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
         <div>
-          <%= l(:field_starting) %>: <%= text_field_tag 'filter[begindate]', params[:filter][:begindate], :size => 10 %><%= calendar_for('filter_begindate') %>
-          <%= l(:field_ending) %>: <%= text_field_tag 'filter[enddate]', params[:filter][:enddate], :size => 10 %><%= calendar_for('filter_enddate') %>
+          <%= l(:field_starting) %>: <%= text_field_tag 'filter[begindate]', @begindate_filter, :size => 10 %><%= calendar_for('filter_begindate') %>
+          <%= l(:field_ending) %>: <%= text_field_tag 'filter[enddate]', @enddate_filter, :size => 10 %><%= calendar_for('filter_enddate') %>
           <%= l(:field_project) %>: <%= collection_select :filter, :project_id, @project_filter_collection, :id, :name, :prompt => l(:label_all), :selected => @project_filter %>
           <%= l(:field_issue) %>: <%= collection_select :filter, :issue_id, @issue_filter_collection, :id, :subject, :prompt => l(:label_all), :selected => @issue_filter %>
         </div>
