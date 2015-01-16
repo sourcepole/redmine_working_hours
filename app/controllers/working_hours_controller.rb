@@ -11,7 +11,10 @@ class WorkingHoursController < ApplicationController
     @enddate_filter = filter_params[:enddate] || Date.today
 
     # apply filter
-    @working_hours = WorkingHours.where(:user_id => User.current.id)
+    @working_hours = WorkingHours
+    unless params[:users] == 'all' && User.current.admin?
+      @working_hours = @working_hours.where(:user_id => User.current.id)
+    end
     @working_hours = @working_hours.where("workday >= ? AND workday <= ?", @begindate_filter, @enddate_filter)
     @working_hours = @working_hours.where(:project_id => filter_params[:project_id]) unless filter_params[:project_id].blank?
     @working_hours = @working_hours.where(:issue_id => filter_params[:issue_id]) unless filter_params[:issue_id].blank?

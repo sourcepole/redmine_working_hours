@@ -57,5 +57,8 @@
   <p class="other-formats">
     <%= l(:label_export_to) %>
     <span><%= link_to 'CSV', params.merge({:format => 'csv'}), :class => 'icon icon-csv' %></span>
+    <% if User.current.admin? %>
+      <span><%= link_to "CSV (#{l(:field_admin)})", params.merge({:format => 'csv', :users => 'all'}), :class => 'icon icon-csv' %></span>
+    <% end %>
   </p>
 <% end %>
