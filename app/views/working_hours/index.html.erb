@@ -60,5 +60,6 @@
     <% if User.current.admin? %>
       <span><%= link_to "CSV (#{l(:field_admin)})", params.merge({:format => 'csv', :users => 'all'}), :class => 'icon icon-csv' %></span>
     <% end %>
+    <span><%= link_to 'iCalendar', params.merge({:format => 'ics', :key => User.current.api_key}), :class => 'icon icon-ics' %></span>
   </p>
 <% end %>

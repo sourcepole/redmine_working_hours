@@ -2,12 +2,18 @@ class WorkingHoursController < ApplicationController
   unloadable
 
   before_filter :require_login
+  accept_api_auth :index
 
   def index
     # filter
     filter_params = params[:filter] || {}
 
-    @begindate_filter = filter_params[:begindate] || Date.today
+    if params[:format] == 'ics'
+      params[:duration] ||= 365
+      @begindate_filter = filter_params[:begindate] || Date.today - params[:duration].to_s.to_i
+    else
+      @begindate_filter = filter_params[:begindate] || Date.today
+    end
     @enddate_filter = filter_params[:enddate] || Date.today
 
     # apply filter
@@ -41,6 +47,9 @@ class WorkingHoursController < ApplicationController
       }
       format.csv {
         send_csv
+      }
+      format.ics {
+        send_ics
       }
     end
   end
@@ -217,6 +226,29 @@ class WorkingHoursController < ApplicationController
     end
 
     send_data(export, :type => 'text/csv; header=present', :filename => 'export.csv')
+  end
+
+  def send_ics
+    export = "BEGIN:VCALENDAR\n"
+    export << "VERSION:2.0\n"
+    export << "PRODID:-//Sourcepole//NONSGML Redmine Working Hours//EN\n"
+    @working_hours.order("starting").each do |entry|
+      next if entry.ending.nil?
+
+      export << "BEGIN:VEVENT\n"
+      export << "DTSTART:#{entry.starting.utc.strftime("%Y%m%dT%H%M%SZ")}\n"
+      export << "DTEND:#{entry.ending.utc.strftime("%Y%m%dT%H%M%SZ")}\n"
+      task = entry.issue ? "\\n##{entry.issue_id} #{entry.issue.subject}": ""
+      export << "SUMMARY:#{entry.project.name}#{task}\n"
+      comments = entry.comments.to_s.gsub(/\r\n|\n/, "\\n")
+      export << "DESCRIPTION:#{comments}\n"
+      export << "ATTENDEE:#{entry.user ? "#{entry.user.firstname} #{entry.user.lastname}" : ""}\n"
+      export << "END:VEVENT\n"
+    end
+
+    export << "END:VCALENDAR\n"
+
+    send_data(export, :type => 'text/calendar', :filename => 'export.ics')
   end
 
 end

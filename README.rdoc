@@ -7,6 +7,7 @@ This plugin provides an additional section on your personal page for tracking yo
 == Features:
 * time tracking with ticket assignment
 * export as CSV
+* iCalendar view
 
 == Installation:
 get Redmine 2.6 stable branch:
@@ -37,6 +38,8 @@ migrate plugin DB:
   * edit working hours comments
 * menu Working hours
   * list and edit working hours
+* iCalendar
+  * optional URL parameter 'duration' to get last n days (365 by default), if not using 'filter[begindate]'
 
 == Tips:
 * We collect all customer projects without Redmine project as tickets in a separate project.
