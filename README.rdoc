@@ -6,6 +6,7 @@ This plugin provides an additional section on your personal page for tracking yo
 
 == Features:
 * time tracking with ticket assignment
+* export as CSV
 
 == Installation:
 get Redmine 2.6 stable branch:

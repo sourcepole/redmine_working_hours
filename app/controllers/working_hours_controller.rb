@@ -10,28 +10,36 @@ class WorkingHoursController < ApplicationController
     @begindate_filter = filter_params[:begindate] || Date.today
     @enddate_filter = filter_params[:enddate] || Date.today
 
-    @project_filter_collection = User.current.projects.order(:name)
-    @project_filter = filter_params[:project_id].to_s.to_i
-
-    @issue_filter_collection = []
-    unless filter_params[:project_id].blank?
-      project = User.current.projects.find(filter_params[:project_id])
-      @issue_filter_collection = WorkingHours.task_issues(project)
-      @issue_filter = filter_params[:issue_id].to_s.to_i
-    end
-
     # apply filter
-    @working_hours = WorkingHours.where(:user_id => User.current.id).order("starting DESC")
+    @working_hours = WorkingHours.where(:user_id => User.current.id)
     @working_hours = @working_hours.where("workday >= ? AND workday <= ?", @begindate_filter, @enddate_filter)
     @working_hours = @working_hours.where(:project_id => filter_params[:project_id]) unless filter_params[:project_id].blank?
     @working_hours = @working_hours.where(:issue_id => filter_params[:issue_id]) unless filter_params[:issue_id].blank?
 
-    @minutes_total = @working_hours.inject(0) { |sum, w| sum + w.minutes }
+    respond_to do |format|
+      format.html {
+        # filter form
+        @project_filter_collection = User.current.projects.order(:name)
+        @project_filter = filter_params[:project_id].to_s.to_i
 
-    # pagination
-    @working_hour_count = @working_hours.count
-    @working_hour_pages = Paginator.new(@working_hour_count, per_page_option, params['page'])
-    @working_hours = @working_hours.limit(@working_hour_pages.per_page).offset(@working_hour_pages.offset)
+        @issue_filter_collection = []
+        unless filter_params[:project_id].blank?
+          project = User.current.projects.find(filter_params[:project_id])
+          @issue_filter_collection = WorkingHours.task_issues(project)
+          @issue_filter = filter_params[:issue_id].to_s.to_i
+        end
+
+        # pagination
+        @working_hour_count = @working_hours.count
+        @working_hour_pages = Paginator.new(@working_hour_count, per_page_option, params['page'])
+        @working_hours = @working_hours.order("starting DESC").limit(@working_hour_pages.per_page).offset(@working_hour_pages.offset)
+
+        @minutes_total = @working_hours.inject(0) { |sum, w| sum + w.minutes }
+      }
+      format.csv {
+        send_csv
+      }
+    end
   end
 
   def new
@@ -179,6 +187,33 @@ class WorkingHoursController < ApplicationController
   rescue Exception => e
     logger.error "Error in startstop user #{user.name} task: #{new_project_id} break: #{breakflag} : #{e.message}"
     nil
+  end
+
+  def send_csv
+    export = FCSV.generate(:col_sep => l(:general_csv_separator)) do |csv|
+      # csv header fields
+      headers = ['User', 'Project', 'Ticket', 'Title', 'Date', 'Begin', 'Break', 'End', 'Comment', 'Duration']
+      csv << headers.collect {|c| Redmine::CodesetUtil.from_utf8(c.to_s, l(:general_csv_encoding) ) }
+
+      # csv lines
+      @working_hours.order("starting").each do |entry|
+        fields = [
+          (entry.user ? entry.user.name : nil),
+          entry.project.name,
+          (entry.issue ? entry.issue_id : nil),
+          (entry.issue ? entry.issue.subject : nil),
+          entry.workday.to_formatted_s(:european),
+          (entry.starting ? entry.starting.to_formatted_s(:time) : nil),
+          entry.break,
+          (entry.ending ? entry.ending.to_formatted_s(:time) : nil),
+          entry.comments,
+          entry.minutes
+        ]
+        csv << fields.collect {|c| Redmine::CodesetUtil.from_utf8(c.to_s, l(:general_csv_encoding) ) }
+      end
+    end
+
+    send_data(export, :type => 'text/csv; header=present', :filename => 'export.csv')
   end
 
 end

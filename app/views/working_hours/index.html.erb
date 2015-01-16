@@ -53,4 +53,9 @@
   <p class="nodata"><%= l(:label_no_data) %></p>
 <% else %>
   <%= render :partial => 'working_hours/list', :locals => {:working_hours => @working_hours} %>
+
+  <p class="other-formats">
+    <%= l(:label_export_to) %>
+    <span><%= link_to 'CSV', params.merge({:format => 'csv'}), :class => 'icon icon-csv' %></span>
+  </p>
 <% end %>
