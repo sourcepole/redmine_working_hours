@@ -11,3 +11,5 @@ resources :working_hours do
     get 'project_issues'
   end
 end
+
+resources :holidays

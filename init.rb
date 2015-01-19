@@ -11,4 +11,6 @@ Redmine::Plugin.register :redmine_working_hours do
     :caption => :working_hours,
     :before => :logout,
     :if => Proc.new { User.current.logged? }
+
+  settings :default => {:workday_hours => 8.0}, :partial => 'settings/working_hours_settings'
 end

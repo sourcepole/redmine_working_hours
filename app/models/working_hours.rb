@@ -18,6 +18,10 @@ class WorkingHours < ActiveRecord::Base
     errors.add(:ending, :invalid) if !ending.nil? && ending < starting
   end
 
+  def self.workday_hours
+    Setting.plugin_redmine_working_hours[:workday_hours]
+  end
+
   def self.find_current(user)
     where("ending IS NULL AND user_id=?", user.id).order("starting DESC").first
   end

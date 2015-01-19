@@ -25,6 +25,7 @@
 
 <div class="contextual">
   <%= link_to l(:button_add), new_working_hour_path(:filter => params[:filter]), :class => 'icon icon-add' %>
+  <%= link_to l(:label_holidays), holidays_path, :class => 'icon icon-ics' %>
 </div>
 
 <h2><%=l(:label_working_hours)%></h2>

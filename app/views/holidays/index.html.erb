@@ -1,0 +1,39 @@
+<% if User.current.admin? %>
+  <div class="contextual">
+    <%= link_to l(:button_add), new_holiday_path, :class => 'icon icon-add' %>
+  </div>
+<% end %>
+
+<h2><%= l(:label_holidays) %></h2>
+
+<% if @holidays.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <table class="list">
+    <thead>
+      <tr>
+        <th><%= l(:field_day) %></th>
+        <th><%= l(:field_hours) %></th>
+        <% if User.current.admin? %>
+          <th></th>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+    <% for entry in @holidays %>
+      <tr>
+        <td><%= entry.day %></td>
+        <td><%= entry.hours %>h</td>
+        <% if User.current.admin? %>
+          <td><%= link_to l(:button_edit), edit_holiday_path(entry), :class => 'icon icon-edit' %></td>
+          <td><%= link_to l(:button_delete), holiday_path(entry), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<p class="pagination"><%= pagination_links_full @holiday_pages, @holiday_count %></p>

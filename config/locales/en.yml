@@ -33,3 +33,5 @@ en:
   field_total: Current
   field_target: Target
   field_vacation_days: Used vacation days
+
+  field_workday_hours: Workday hours

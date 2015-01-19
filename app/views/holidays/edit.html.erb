@@ -1,0 +1,8 @@
+<h2><%= l(:label_holidays) %></h2>
+
+<%= labelled_form_for @holiday, :url => holiday_path(@holiday) do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f} %>
+  <%= submit_tag l(:button_save) %>
+<% end %>
+
+<p><%= link_to l(:button_back), holidays_path %></p>

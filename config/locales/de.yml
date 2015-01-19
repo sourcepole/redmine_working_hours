@@ -33,3 +33,5 @@ de:
   field_total: Ist
   field_target: Soll
   field_vacation_days: Benutzte Ferientage
+
+  field_workday_hours: Stunden pro Arbeitstag

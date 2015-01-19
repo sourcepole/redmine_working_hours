@@ -8,6 +8,7 @@ This plugin provides an additional section on your personal page for tracking yo
 * time tracking with ticket assignment
 * export as CSV
 * iCalendar view
+* manage holidays
 
 == Installation:
 get Redmine 2.6 stable branch:
@@ -26,6 +27,12 @@ migrate plugin DB:
 
 == Configuration
 
+=== Workday hours
+* set workday hours for a full pensum on the plugin configuration page (default 8h)
+
+=== Holidays
+* Admin users can edit holidays
+
 === Time of workday change
 * issues starting before this time will be assigned to the previous workday
 * set time of workday change as WORKDAY_CHANGE_HOUR on app/models/working_hours.rb (default 5 = 5:00:00)
@@ -38,6 +45,8 @@ migrate plugin DB:
   * edit working hours comments
 * menu Working hours
   * list and edit working hours
+* holidays
+  * link from working hours page
 * iCalendar
   * optional URL parameter 'duration' to get last n days (365 by default), if not using 'filter[begindate]'
 
