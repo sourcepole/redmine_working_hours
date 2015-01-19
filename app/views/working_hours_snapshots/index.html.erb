@@ -1,0 +1,39 @@
+<div class="contextual">
+  <%= link_to l(:button_add), new_working_hours_snapshot_path, :class => 'icon icon-add' %>
+</div>
+
+<h2><%= l(:label_working_hours_snapshots) %></h2>
+
+<% if @snapshots.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <table class="list">
+    <thead>
+      <tr>
+        <th><%= l(:field_user) %></th>
+        <th><%= l(:field_date) %></th>
+        <th><%= l(:field_total) %></th>
+        <th><%= l(:field_target) %></th>
+        <th><%= l(:field_vacation_days) %></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+    <% @snapshots.each do |entry| %>
+      <tr>
+        <td><%= User.find(entry.user_id).name %></td>
+        <td><%= entry.date %></td>
+        <td><%= entry.total %>' (<%= "#{'%.1f' % (entry.total/60.0)}h" %>)</td>
+        <td><%= entry.target %>' (<%= "#{'%.1f' % (entry.target/60.0)}h" %>)</td>
+        <td><%= entry.vacation_days %> d</td>
+        <td><%= link_to l(:button_edit), edit_working_hours_snapshot_path(entry), :class => 'icon icon-edit' %></td>
+        <td><%= link_to l(:button_delete), working_hours_snapshot_path(entry), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<p class="pagination"><%= pagination_links_full @snapshot_pages, @snapshot_count %></p>

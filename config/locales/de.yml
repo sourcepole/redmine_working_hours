@@ -9,7 +9,7 @@ de:
   label_duration: Zeitdauer
   label_holidays: Feiertage
   label_holidays_new: Feiertag hinzufügen
-  label_holidays_edit: Feiertage bearbeiten
+  label_holiday_edit: Feiertag bearbeiten
   label_vacation: Ferien
   label_vacation_left: Ferienguthaben
   label_today_capitalized: Heute
@@ -17,7 +17,7 @@ de:
   label_full_day: Ganzer Tag
   label_working_hours_snapshots: Arbeitszeit Zwischenstände
   label_working_hours_snapshots_new: Arbeitszeit Zwischenstand hinzufügen
-  label_working_hours_snapshots_edit: Arbeitszeit Zwischenstände bearbeiten
+  label_working_hours_snapshot_edit: Arbeitszeit Zwischenstand bearbeiten
 
   label_target_remaining: Restsoll
   label_diff_until_now: Diff. bis heute

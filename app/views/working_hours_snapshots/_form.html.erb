@@ -1,0 +1,12 @@
+<%= error_messages_for 'snapshot' %>
+
+<div class="box tabular">
+  <p>
+    <%= label_tag 'working_hours_snapshot_user_id', l(:field_user) %>
+    <%= f.collection_select :user_id, @users, :id, :name, {:include_blank => false} %>
+  </p>
+  <p><%= f.text_field :date, :size => 10, :value => (@snapshot.date.to_date.strftime("%Y-%m-%d") rescue nil) %><%= calendar_for('working_hours_snapshot_date') %></p>
+  <p><%= f.text_field :total, :size => 5 %> min</p>
+  <p><%= f.text_field :target, :size => 5 %> min</p>
+  <p><%= f.text_field :vacation_days, :size => 5 %> d</p>
+</div>

@@ -13,3 +13,4 @@ resources :working_hours do
 end
 
 resources :holidays
+resources :working_hours_snapshots

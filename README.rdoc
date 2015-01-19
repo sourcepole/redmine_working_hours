@@ -9,6 +9,7 @@ This plugin provides an additional section on your personal page for tracking yo
 * export as CSV
 * iCalendar view
 * manage holidays
+* working hours snapshots
 
 == Installation:
 get Redmine 2.6 stable branch:

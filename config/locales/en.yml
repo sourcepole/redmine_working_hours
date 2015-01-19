@@ -9,7 +9,7 @@ en:
   label_duration: Duration
   label_holidays: Holidays
   label_holidays_new: Add holiday
-  label_holidays_edit: Edit holidays
+  label_holiday_edit: Edit holiday
   label_vacation: Vacation
   label_vacation_left: Remaining vacations
   label_today_capitalized: Today
@@ -17,7 +17,7 @@ en:
   label_full_day: Full day
   label_working_hours_snapshots: Working hours snapshots
   label_working_hours_snapshots_new: Add working hours snapshot
-  label_working_hours_snapshots_edit: Edit working hours snapshots
+  label_working_hours_snapshot_edit: Edit working hours snapshot
 
   label_target_remaining: Target remaining
   label_diff_until_now: Diff. until today
