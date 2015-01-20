@@ -15,7 +15,7 @@
   </thead>
 
   <tbody>
-  <% for entry in working_hours %>
+  <% working_hours.each do |entry| %>
     <tr>
       <td><%= link_to entry.project.name, project_path(entry.project) unless entry.project.nil? %></td>
       <td><%= link_to "##{entry.issue_id} #{truncate(h(entry.issue.subject), :length => 30)}", issue_path(entry.issue) unless entry.issue.nil? %></td>

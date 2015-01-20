@@ -22,7 +22,7 @@
     </thead>
 
     <tbody>
-    <% for entry in @holidays %>
+    <% @holidays.each do |entry| %>
       <tr>
         <td><%= entry.day %></td>
         <td><%= entry.hours %>h</td>

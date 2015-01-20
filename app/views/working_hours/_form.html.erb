@@ -53,7 +53,7 @@
   <%= radio_button_tag 'subform', 'Duration', false %> <%= l(:label_duration) %>
 
   <div id="timestamps_subform">
-    <p><%= f.text_field :starting, :size => 25, :value => @working_hours.starting.strftime("%Y-%m-%d %H:%M:%S") %></p>
+    <p><%= f.text_field :starting, :size => 25, :value => (@working_hours.starting.strftime("%Y-%m-%d %H:%M:%S") rescue nil) %></p>
     <p><%= f.text_field 'break', "size" => 5 %></p>
     <p>
       <%= f.text_field :ending, :size => 25, :value => (@working_hours.ending.nil? ? '' : @working_hours.ending.strftime("%Y-%m-%d %H:%M:%S")) %>
@@ -63,7 +63,7 @@
 
   <div id="duration_subform" style="display:none">
     <p>
-      <%= f.text_field :workday, :size => 10, :value => @working_hours.workday.to_date.strftime("%Y-%m-%d") %>
+      <%= f.text_field :workday, :size => 10, :value => (@working_hours.workday.strftime("%Y-%m-%d") rescue nil) %>
       <%= calendar_for('working_hours_workday') %></p>
     <p>
       <%= label_tag 'duration', l(:field_hours) %>

@@ -6,7 +6,7 @@ class WorkingHours < ActiveRecord::Base
   belongs_to :issue
   belongs_to :time_entry, :dependent => :destroy
 
-  validates_presence_of :user, :project, :starting
+  validates_presence_of :user, :project, :workday, :starting
   validate :validate_ending_after_starting
 
   before_save :update_time_entry
@@ -15,7 +15,7 @@ class WorkingHours < ActiveRecord::Base
   WORKDAY_CHANGE_HOUR = 5
 
   def validate_ending_after_starting
-    errors.add(:ending, :invalid) if !ending.nil? && ending < starting
+    errors.add(:ending, :invalid) if !starting.nil? && !ending.nil? && ending < starting
   end
 
   def self.workday_hours
