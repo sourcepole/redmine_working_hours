@@ -19,7 +19,7 @@ class WorkingHours < ActiveRecord::Base
   end
 
   def self.workday_hours
-    Setting.plugin_redmine_working_hours[:workday_hours]
+    Setting.plugin_redmine_working_hours[:workday_hours].to_f
   end
 
   def self.find_current(user)
@@ -80,6 +80,154 @@ class WorkingHours < ActiveRecord::Base
   rescue Exception => e
     logger.error "Error in update_time_entry(), working_hour '#{id}', time_entry '#{time_entry_id}' : #{e.message}"
     nil
+  end
+
+  # total time
+
+  def self.total_minutes(start_date, end_date, user)
+    minutes = 0
+
+    snapshot = WorkingHoursSnapshot.find_current(user, start_date, end_date)
+    unless snapshot.nil?
+      start_date = snapshot.date
+      minutes = snapshot.total
+    end
+
+    working_hours = WorkingHours.where(:user_id => user.id).where("workday >= ? AND workday <= ?", start_date, end_date)
+    working_hours.inject(minutes) { |sum, j| sum + j.minutes }
+  end
+
+  def self.total_minutes_day(date, user=User.current)
+    total_minutes(date, date, user)
+  end
+
+  def self.total_minutes_month(month, year=Time.now.year, user=User.current)
+    start_date = Date.new(year, month, 1)
+    end_date = last_day_of_month(month, year)
+    total_minutes(start_date, end_date, user)
+  end
+
+  # target time
+
+  def self.target_minutes(start_date, end_date, user)
+    minutes = 0
+
+    snapshot = WorkingHoursSnapshot.find_current(user, start_date, end_date)
+    unless snapshot.nil?
+      start_date = snapshot.date
+      minutes = snapshot.target
+    end
+
+    holidays = Holiday.where("day >= ? AND day <= ?", start_date, end_date).pluck(:day)
+    t = start_date
+    num_days = (end_date - start_date + 1).to_int
+    num_days.times do
+      if t.wday != 0 and t.wday != 6
+        # not a weekend
+        if holidays.include?(t)
+          # holiday on working day
+          holiday = Holiday.find_by_day(t)
+          hours = workday_hours - holiday.hours
+          if hours < 0
+            hours = 0
+          end
+          minutes += hours * 60
+        else
+          # working day
+          minutes += workday_hours * 60
+        end
+      end
+      t += 1
+    end
+
+    minutes *= user_pensum(user)
+    minutes
+  end
+
+  def self.target_minutes_month(month, year=Time.now.year, user=User.current)
+    start_date = Date.new(year, month, 1)
+    end_date = last_day_of_month(month, year)
+    target_minutes(start_date, end_date, user)
+  end
+
+  # difference to target time
+
+  def self.diff_minutes(start_date, end_date, user=User.current)
+    total_minutes(start_date, end_date, user) - target_minutes(start_date, end_date, user)
+  end
+
+  # difference to target time since beginning of year
+  def self.diff_minutes_until_day(end_date, user=User.current)
+    start_date = Date.new(end_date.year, 1, 1)
+    diff_minutes(start_date, end_date, user)
+  end
+
+  # vacation days
+
+  def self.vacation_issue
+    Issue.find_by_id(Setting.plugin_redmine_working_hours[:vacation_issue_id])
+  end
+
+  def self.vacation_days_available(user=User.current)
+    user_vacation_days = 0
+    custom_field = CustomField.find_by_name('working_hours_vacation_days')
+    unless custom_field.nil?
+      cv = CustomValue.where(:custom_field_id => custom_field.id).where(:customized_id => user.id).first
+      unless cv.nil?
+        user_vacation_days = cv.value.to_i
+      end
+    end
+
+    start_date = Date.new(Time.now.year, 1, 1)
+    end_date = Date.today
+    days_used = 0.0
+
+    snapshot = WorkingHoursSnapshot.find_current(user, start_date, end_date)
+    unless snapshot.nil?
+      start_date = snapshot.date
+      days_used = snapshot.vacation_days
+    end
+
+    unless vacation_issue.nil?
+      holidays = Holiday.where("day >= ? AND day <= ?", start_date, end_date).pluck(:day)
+      working_hours = WorkingHours.where(:user_id => user.id).where(:issue_id => vacation_issue.id).where("workday >= ? AND workday <= ?", start_date, end_date)
+      working_hours.each do |wh|
+        if wh.workday.wday != 0 and wh.workday.wday != 6
+          unless holidays.include?(wh.workday)
+            # not a weekend and not a holiday
+            if wh.minutes/60.0 > workday_hours/2.0
+              days_used += 1.0
+            else
+              days_used += 0.5
+            end
+          end
+        end
+      end
+    end
+
+    user_vacation_days - days_used
+  end
+
+  # helpers
+
+  def self.last_day_of_month(month, year=Time.now.year)
+    if month == 12
+      Date.new(year, 12, 31)
+    else
+      Date.new(year, (month + 1), 1) - 1.day
+    end
+  end
+
+  def self.user_pensum(user)
+    pensum = 1.0
+    custom_field = CustomField.find_by_name('working_hours_pensum')
+    unless custom_field.nil?
+      cv = CustomValue.where(:custom_field_id => custom_field.id).where(:customized_id => user.id).first
+      unless cv.nil?
+        pensum = cv.value.to_f
+      end
+    end
+    pensum
   end
 
 end

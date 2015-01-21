@@ -38,12 +38,12 @@ class WorkingHoursController < ApplicationController
           @issue_filter = filter_params[:issue_id].to_s.to_i
         end
 
+        @minutes_total = @working_hours.inject(0) { |sum, w| sum + w.minutes }
+
         # pagination
         @working_hour_count = @working_hours.count
         @working_hour_pages = Paginator.new(@working_hour_count, per_page_option, params['page'])
         @working_hours = @working_hours.order("starting DESC").limit(@working_hour_pages.per_page).offset(@working_hour_pages.offset)
-
-        @minutes_total = @working_hours.inject(0) { |sum, w| sum + w.minutes }
       }
       format.csv {
         send_csv

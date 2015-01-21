@@ -6,6 +6,8 @@ This plugin provides an additional section on your personal page for tracking yo
 
 == Features:
 * time tracking with ticket assignment
+* working hours statistics per user
+* remaining vacation days per user
 * export as CSV
 * iCalendar view
 * manage holidays
@@ -26,13 +28,46 @@ install Redmine
 migrate plugin DB:
   rake redmine:plugins:migrate
 
+run plugin unit tests:
+  rake redmine:plugins:test:units
+
 == Configuration
 
-=== Workday hours
-* set workday hours for a full pensum on the plugin configuration page (default 8h)
+=== Vacation issue
+* create vacation issue
+  * Subject: <vacation_subject>
+  * Assigned to: nobody
+
+=== Configure plugin
+* Administration -> Plugins -> Configure "Redmine Working Hours plugin"
+  * set workday hours for a full pensum (default 8h)
+  * set vacation issue id
+
+=== Configure users
+* add custom field for user pensum
+  * Administration -> Custom fields -> New custom field -> Users
+    * Format: Float
+    * Name: working_hours_pensum
+    * Default value: 1.0
+    * Required: check
+    * Editable: uncheck
+  * set working_hours_pensum for each user in Administration -> Users
+* add custom field for user vacation days
+  * Administration -> Custom fields -> New custom field -> Users
+    * Format: Integer
+    * Name: working_hours_vacation_days
+    * Default value: 0
+    * Required: check
+    * Editable: uncheck
+  * set working_hours_vacation_days for each user in Administration -> Users
+    * vacation days are counted as full working days, e.g. if a user with pensum=1.0 has 20 days then a user with pensum=0.5 has 10 days
 
 === Holidays
-* Admin users can edit holidays
+* edit holidays
+
+=== Workday hours snapshots
+A snapshot containing used vacation days, current and target times can be created for a user. This is used if a user starts working in the middle of the year or his pensum changes.
+Working hours overview calculations are based on the latest user snapshot or the beginning of the year if no snapshots are found.
 
 === Time of workday change
 * issues starting before this time will be assigned to the previous workday
@@ -46,6 +81,8 @@ migrate plugin DB:
   * edit working hours comments
 * menu Working hours
   * list and edit working hours
+  * statistics for current day and month
+  * remaining vacation days
 * holidays
   * link from working hours page
 * iCalendar

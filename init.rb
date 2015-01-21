@@ -12,5 +12,5 @@ Redmine::Plugin.register :redmine_working_hours do
     :before => :logout,
     :if => Proc.new { User.current.logged? }
 
-  settings :default => {:workday_hours => 8.0}, :partial => 'settings/working_hours_settings'
+  settings :default => {:workday_hours => 8.0, :vacation_issue_id => nil}, :partial => 'settings/working_hours_settings'
 end

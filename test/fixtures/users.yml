@@ -1,0 +1,16 @@
+--- 
+users_001: 
+  id: 1
+  login: admin
+  admin: true
+  type: User
+users_002: 
+  id: 2
+  login: dev1
+  admin: false
+  type: User
+users_003: 
+  id: 3
+  login: dev2
+  admin: false
+  type: User

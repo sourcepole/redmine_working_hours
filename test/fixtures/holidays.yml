@@ -1,0 +1,17 @@
+---
+holiday_001:
+  id: 1
+  day: 2015-01-01
+  hours: 8
+holiday_002:
+  id: 2
+  day: 2015-01-02
+  hours: 8
+holiday_003: # Saturday
+  id: 3
+  day: 2015-01-03
+  hours: 8
+holiday_004: # half holiday
+  id: 4
+  day: 2015-01-20
+  hours: 4

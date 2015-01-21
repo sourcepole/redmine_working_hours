@@ -2,3 +2,9 @@
   <%= label_tag 'settings_workday_hours', l('field_workday_hours') %>
   <%= text_field_tag 'settings[workday_hours]', settings[:workday_hours] %>
 </p>
+<p>
+  <%= label_tag 'settings_vacation_issue_id', l('field_vacation_issue_id') %>
+  <%= text_field_tag 'settings[vacation_issue_id]', settings[:vacation_issue_id] %>
+  <% issue = Issue.where(:id => settings[:vacation_issue_id]).first %>
+  <%= issue.nil? ? "#{l(:label_issue)} #{l('activerecord.errors.messages.invalid')}" : link_to(issue.subject, issue_path(settings[:vacation_issue_id])) %>
+</p>

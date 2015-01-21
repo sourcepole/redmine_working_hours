@@ -1,8 +1,8 @@
 class CreateWorkingHours < ActiveRecord::Migration
   def change
     create_table :working_hours do |t|
-      t.column "project_id", :integer
       t.column "user_id", :integer, :null => false
+      t.column "project_id", :integer
       t.column "issue_id", :integer
       t.column "time_entry_id", :integer
       t.column "comments", :string

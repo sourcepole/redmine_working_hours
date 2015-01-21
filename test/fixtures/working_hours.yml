@@ -1,0 +1,121 @@
+---
+working_hours_001:
+  id: 1
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-01-05
+  starting: 2015-01-05 08:00:00
+  break: 0
+  ending: 2015-01-05 10:00:00
+working_hours_002:
+  id: 2
+  user_id: 2
+  project_id: 1
+  issue_id: 3
+  comments:
+  workday: 2015-01-05
+  starting: 2015-01-05 10:00:00
+  break: 0
+  ending: 2015-01-05 12:00:00
+working_hours_003:
+  id: 3
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-01-05
+  starting: 2015-01-05 13:00:00
+  break: 30
+  ending: 2015-01-05 17:30:00
+working_hours_004:
+  id: 4
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-01-06
+  starting: 2015-01-06 08:00:00
+  break: 0
+  ending: 2015-01-06 09:00:00
+working_hours_005:
+  id: 5
+  user_id: 2
+  project_id: 1
+  issue_id: 3
+  comments:
+  workday: 2015-01-06
+  starting: 2015-01-06 09:00:00
+  break: 0
+  ending: 2015-01-06 12:00:00
+working_hours_006:
+  id: 6
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-01-06
+  starting: 2015-01-06 13:00:00
+  break: 0
+  ending: 2015-01-06 17:00:00
+working_hours_007:
+  id: 7
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-01-07
+  starting: 2015-01-07 08:00:00
+  break: 0
+  ending: 2015-01-07 12:00:00
+working_hours_008:
+  id: 8
+  user_id: 2
+  project_id: 1
+  issue_id: 3
+  comments:
+  workday: 2015-01-07
+  starting: 2015-01-07 13:00:00
+  break: 0
+  ending: 2015-01-07 17:00:00
+working_hours_009:
+  id: 9
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-02-01
+  starting: 2015-02-01 08:00:00
+  break: 0
+  ending: 2015-02-01 11:00:00
+working_hours_010:
+  id: 10
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-02-01
+  starting: 2015-02-01 11:00:00
+  break: 0
+  ending: 2015-02-01 12:00:00
+working_hours_011:
+  id: 11
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-02-01
+  starting: 2015-02-01 13:00:00
+  break: 0
+  ending: 2015-02-01 17:00:00
+working_hours_012:
+  id: 12
+  user_id: 2
+  project_id: 1
+  issue_id: 2
+  comments:
+  workday: 2015-02-02
+  starting: 2015-02-02 08:00:00
+  break: 60
+  ending: 2015-02-02 17:00:00

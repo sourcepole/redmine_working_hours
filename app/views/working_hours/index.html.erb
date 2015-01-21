@@ -67,3 +67,27 @@
     <span><%= link_to 'iCalendar', params.merge({:format => 'ics', :key => User.current.api_key}), :class => 'icon icon-ics' %></span>
   </p>
 <% end %>
+
+<h3><%= l(:label_overview) %></h3>
+
+<p><%= l(:label_today_capitalized) %>: <%= duration(WorkingHours.total_minutes_day(Date.today)) %></p>
+
+<%= l(:label_month) %>:
+<table class="list">
+  <thead>
+    <th><%= l(:field_total) %></th>
+    <th><%= l(:field_target) %></th>
+    <th><%= l(:label_target_remaining) %></th>
+    <th><%= l(:label_diff_until_now) %></th>
+    <th><%= l(:label_diff_prev_month) %></th>
+  </thead>
+  <tr>
+    <td><%= "#{'%.1f' % (WorkingHours.total_minutes_month(Time.now.month)/60.0)}h" %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.target_minutes_month(Time.now.month)/60.0)}h" %></td>
+    <td><%= "#{'%.1f' % (-WorkingHours.diff_minutes_until_day(WorkingHours.last_day_of_month(Time.now.month))/60.0)}h" %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Date.today - 1)/60.0)}h" %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Time.local(Time.now.year, Time.now.month, 1).to_date - 1)/60.0)}h" %></td>
+  </tr>
+</table>
+
+<p><%= l(:label_vacation_left) %>: <%= WorkingHours.vacation_days_available %> <%= l(:label_day_plural) %></p>

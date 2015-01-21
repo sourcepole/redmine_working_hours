@@ -1,0 +1,31 @@
+--- 
+issues_001: 
+  id: 1
+  tracker_id: 1
+  project_id: 1
+  subject: Vacation
+  description: Vacation issue for working hours
+  status_id: 1
+  assigned_to_id: 
+  priority_id: 2
+  author_id: 1
+issues_002: 
+  id: 2
+  tracker_id: 1
+  project_id: 1
+  subject: Bug
+  description: Bug issue
+  status_id: 1
+  assigned_to_id: 2
+  priority_id: 2
+  author_id: 1
+issues_003: 
+  id: 3
+  tracker_id: 1
+  project_id: 1
+  subject: Feature
+  description: Feature issue
+  status_id: 1
+  assigned_to_id: 2
+  priority_id: 2
+  author_id: 1
