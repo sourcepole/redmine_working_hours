@@ -9,6 +9,8 @@ resources :working_hours do
     get 'startstop'
     post 'break'
     get 'project_issues'
+    match 'vacation/new' => 'working_hours#new_vacation', :via => :get, :as => 'new_vacation'
+    match 'vacation' => 'working_hours#create_vacation', :via => :post
   end
 end
 

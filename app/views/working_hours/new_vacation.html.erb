@@ -1,0 +1,33 @@
+<h2><%= l(:label_vacation_new) %></h2>
+
+<%= labelled_form_for @working_hours, :url => vacation_working_hours_path(:filter => params[:filter], :vacation => params[:vacation]) do |f| %>
+  <%= error_messages_for 'working_hours' %>
+
+  <div class="tabs">
+    <ul>
+      <li><%= link_to l(:label_issue), new_working_hour_path(:filter => params[:filter]) %></li>
+      <li><%= link_to l(:label_vacation), "#", :class => 'selected' %></li>
+    </ul>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'vacation_start_date', l(:field_starting) %>
+      <%= text_field_tag 'vacation_start_date', @vacation_start_date, :size => 10 %>
+      <%= calendar_for('vacation_start_date') %>
+    </p>
+    <p>
+      <%= label_tag 'vacation_end_date', l(:field_ending) %>
+      <%= text_field_tag 'vacation_end_date', @vacation_end_date, :size => 10 %>
+      <%= calendar_for('vacation_end_date') %>
+    </p>
+
+    <hr/>
+
+    <p><%= f.text_area 'comments', :cols => 40, :rows => 3  %></p>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<p><%= link_to l(:button_back), working_hours_path(:filter => params[:filter]) %></p>

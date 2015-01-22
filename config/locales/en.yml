@@ -12,6 +12,7 @@ en:
   label_holiday_edit: Edit holiday
   label_vacation: Vacation
   label_vacation_left: Remaining vacations
+  label_vacation_new: Add vacation
   label_today_capitalized: Today
   label_half_day: Half day
   label_full_day: Full day
@@ -36,3 +37,4 @@ en:
 
   field_workday_hours: Workday hours
   field_vacation_issue_id: Vacation issue ID
+  error_no_vacation_issue: No vacation issue selected

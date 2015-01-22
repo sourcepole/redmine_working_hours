@@ -12,6 +12,7 @@ de:
   label_holiday_edit: Feiertag bearbeiten
   label_vacation: Ferien
   label_vacation_left: Ferienguthaben
+  label_vacation_new: Ferien hinzufügen
   label_today_capitalized: Heute
   label_half_day: Halber Tag
   label_full_day: Ganzer Tag
@@ -36,3 +37,4 @@ de:
 
   field_workday_hours: Stunden pro Arbeitstag
   field_vacation_issue_id: Ferienticket ID
+  error_no_vacation_issue: Kein Ferienticket ausgewählt

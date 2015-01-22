@@ -37,6 +37,15 @@
 
 <%= error_messages_for 'working_hours' %>
 
+<% if @working_hours.new_record? && !WorkingHours.vacation_issue.nil? %>
+  <div class="tabs">
+    <ul>
+      <li><%= link_to l(:label_issue), "#", :class => 'selected' %></li>
+      <li><%= link_to l(:label_vacation), new_vacation_working_hours_path(:filter => params[:filter]) %></li>
+    </ul>
+  </div>
+<% end %>
+
 <div class="box tabular">
   <p>
     <%= label_tag 'working_hours_project_id', l(:field_project) %>
@@ -64,10 +73,11 @@
   <div id="duration_subform" style="display:none">
     <p>
       <%= f.text_field :workday, :size => 10, :value => (@working_hours.workday.strftime("%Y-%m-%d") rescue nil) %>
-      <%= calendar_for('working_hours_workday') %></p>
+      <%= calendar_for('working_hours_workday') %>
+    </p>
     <p>
       <%= label_tag 'duration', l(:field_hours) %>
-      <%= text_field_tag 'duration', ('%.1f' % (@working_hours.minutes/60.0)), "size" => 5  %>
+      <%= text_field_tag 'duration', ('%.1f' % (@working_hours.minutes/60.0)), "size" => 5 %>
     </p>
   </div>
 

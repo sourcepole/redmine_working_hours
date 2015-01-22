@@ -73,6 +73,71 @@ class WorkingHoursController < ApplicationController
     end
   end
 
+  def new_vacation
+    @working_hours = WorkingHours.new
+    @vacation_start_date = Date.today
+    @vacation_end_date = Date.today
+
+    flash[:error] = l(:error_no_vacation_issue) if WorkingHours.vacation_issue.nil?
+  end
+
+  def create_vacation
+    vacation_issue = WorkingHours.vacation_issue
+    if vacation_issue.nil?
+      flash[:error] = l(:error_no_vacation_issue)
+      redirect_to :action => 'index', :filter => params[:filter]
+      return
+    end
+
+    start_date = params[:vacation_start_date].to_date rescue nil
+    end_date = params[:vacation_end_date].to_date rescue nil
+    if start_date.nil? || end_date.nil? || end_date < start_date
+      @working_hours = WorkingHours.new(params[:working_hours])
+      @working_hours.errors.add(:starting, :invalid) if start_date.nil?
+      @working_hours.errors.add(:ending, :invalid) if end_date.nil? || end_date < start_date
+      @vacation_start_date = params[:vacation_start_date]
+      @vacation_end_date = params[:vacation_end_date]
+      render :action => 'new_vacation'
+      return
+    end
+
+    vacation_project = vacation_issue.project
+    holidays = Holiday.where("day >= ? AND day <= ?", start_date, end_date).pluck(:day)
+
+    t = start_date
+    num_days = (end_date - start_date + 1).to_int
+    num_days.times do
+      if t.wday != 0 and t.wday != 6
+        # not a weekend
+        working_hours = WorkingHours.new(params[:working_hours])
+        working_hours.user = User.current
+        working_hours.project = vacation_project
+        working_hours.issue = vacation_issue
+        working_hours.break = 0
+        working_hours.workday = t
+        working_hours.starting = t.to_time
+
+        if holidays.include?(t)
+          # holiday on working day
+          holiday = Holiday.find_by_day(t)
+          delta_hours = WorkingHours.workday_hours - holiday.hours
+          if delta_hours > 0.0
+            working_hours.ending = working_hours.starting + delta_hours.hours ## * 3600
+            working_hours.save
+          end
+        else
+          # working day
+          working_hours.ending = working_hours.starting + WorkingHours.workday_hours.hours ### * 3600
+          working_hours.save
+        end
+      end
+      t += 1
+    end
+
+    flash[:notice] = l(:notice_successful_create)
+    redirect_to :action => 'index', :filter => params[:filter]
+  end
+
   def edit
     @working_hours = WorkingHours.find(params[:id])
     @issues = WorkingHours.task_issues(@working_hours.project)
