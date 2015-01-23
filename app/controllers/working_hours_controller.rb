@@ -122,12 +122,12 @@ class WorkingHoursController < ApplicationController
           holiday = Holiday.find_by_day(t)
           delta_hours = WorkingHours.workday_hours - holiday.hours
           if delta_hours > 0.0
-            working_hours.ending = working_hours.starting + delta_hours.hours ## * 3600
+            working_hours.ending = working_hours.starting + delta_hours.hours
             working_hours.save
           end
         else
           # working day
-          working_hours.ending = working_hours.starting + WorkingHours.workday_hours.hours ### * 3600
+          working_hours.ending = working_hours.starting + WorkingHours.workday_hours.hours
           working_hours.save
         end
       end
@@ -190,6 +190,18 @@ class WorkingHoursController < ApplicationController
     end
   end
 
+  def statistics
+    filter_params = params[:filter] || {}
+    @begindate_filter = filter_params[:begindate] || Date.new(Time.now.year, Time.now.month, 1)
+    @enddate_filter = filter_params[:enddate] || Date.today - 1.day
+
+    begindate = @begindate_filter.to_date
+    enddate = @enddate_filter.to_date
+    @actual_hours = WorkingHours.total_minutes(begindate, enddate, User.current) / 60.0
+    @target_hours = WorkingHours.target_minutes(begindate, enddate, User.current) / 60.0
+    @diff_hours = WorkingHours.diff_minutes(begindate, enddate, User.current) / 60.0
+  end
+
   private
 
   MINGAP = 60
@@ -210,7 +222,7 @@ class WorkingHoursController < ApplicationController
       when 'Duration'
         unless @working_hours.workday.blank?
           @working_hours.starting = Time.local(@working_hours.workday.year, @working_hours.workday.month, @working_hours.workday.day)
-          @working_hours.ending = @working_hours.starting + params['duration'].to_f * 3600
+          @working_hours.ending = @working_hours.starting + params['duration'].to_f.hours
         end
     end
   end

@@ -85,9 +85,11 @@
     <td><%= "#{'%.1f' % (WorkingHours.total_minutes_month(Time.now.month)/60.0)}h" %></td>
     <td><%= "#{'%.1f' % (WorkingHours.target_minutes_month(Time.now.month)/60.0)}h" %></td>
     <td><%= "#{'%.1f' % (-WorkingHours.diff_minutes_until_day(WorkingHours.last_day_of_month(Time.now.month))/60.0)}h" %></td>
-    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Date.today - 1)/60.0)}h" %></td>
-    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Time.local(Time.now.year, Time.now.month, 1).to_date - 1)/60.0)}h" %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Date.today - 1.day)/60.0)}h" %></td>
+    <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Date.new(Time.now.year, Time.now.month, 1) - 1.day)/60.0)}h" %></td>
   </tr>
 </table>
 
 <p><%= l(:label_vacation_left) %>: <%= WorkingHours.vacation_days_available %> <%= l(:label_day_plural) %></p>
+
+<p><%= link_to l(:label_working_hours_statistics), statistics_working_hours_path %><p>

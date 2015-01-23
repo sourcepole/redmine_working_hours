@@ -23,6 +23,8 @@ de:
   label_target_remaining: Restsoll
   label_diff_until_now: Diff. bis heute
   label_diff_prev_month: Diff. im Vormonat
+  label_diff: Differenz
+  label_working_hours_statistics: Arbeitszeit Statistik
 
   field_workday: Arbeitstag
   field_starting: Start

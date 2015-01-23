@@ -1,0 +1,46 @@
+<% content_for :header_tags do %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('input#filter_begindate, input#filter_enddate').keyup(function(e) {
+        if (e.keyCode == 13) {
+          $("#query_form").submit();
+        }
+      });
+    });
+  </script>
+
+  <%= stylesheet_link_tag '/plugin_assets/redmine_working_hours/stylesheets/working_hours' %>
+<% end %>
+
+<h2><%=l(:label_working_hours_statistics)%></h2>
+
+<%= form_tag({ :action => 'statistics'},:method => :get, :id => 'query_form') do %>
+  <div id="query_form_with_buttons" class="hide-when-print">
+    <div id="query_form_content">
+      <fieldset id="filters" class="collapsible">
+        <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+        <div>
+          <%= l(:field_starting) %>: <%= text_field_tag 'filter[begindate]', @begindate_filter, :size => 10 %><%= calendar_for('filter_begindate') %>
+          <%= l(:field_ending) %>: <%= text_field_tag 'filter[enddate]', @enddate_filter, :size => 10 %><%= calendar_for('filter_enddate') %>
+        </div>
+      </fieldset>
+    </div>
+    <p class="buttons">
+      <%= link_to_function l(:button_apply), '$("#query_form").submit()', :class => 'icon icon-checked' %>
+      <%= link_to l(:button_clear), {}, :class => 'icon icon-reload'  %>
+    </p>
+  </div>
+<% end %>
+
+<table class="list">
+  <thead>
+    <th><%= l(:field_total) %></th>
+    <th><%= l(:field_target) %></th>
+    <th><%= l(:label_diff) %></th>
+  </thead>
+  <tr>
+    <td><%= "#{'%.1f' % @actual_hours}h" %></td>
+    <td><%= "#{'%.1f' % @target_hours}h" %></td>
+    <td><%= "#{'%.1f' % @diff_hours}h" %></td>
+  </tr>
+</table>

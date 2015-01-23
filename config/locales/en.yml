@@ -23,6 +23,8 @@ en:
   label_target_remaining: Target remaining
   label_diff_until_now: Diff. until today
   label_diff_prev_month: Diff. last month
+  label_diff: Difference
+  label_working_hours_statistics: Working hours statistics
 
   field_workday: Workday
   field_starting: Start
