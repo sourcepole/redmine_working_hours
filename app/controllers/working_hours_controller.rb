@@ -43,7 +43,7 @@ class WorkingHoursController < ApplicationController
         # pagination
         @working_hour_count = @working_hours.count
         @working_hour_pages = Paginator.new(@working_hour_count, per_page_option, params['page'])
-        @working_hours = @working_hours.order("starting DESC").limit(@working_hour_pages.per_page).offset(@working_hour_pages.offset)
+        @working_hours = @working_hours.order("#{WorkingHours.table_name}.starting DESC").limit(@working_hour_pages.per_page).offset(@working_hour_pages.offset)
       }
       format.csv {
         send_csv
@@ -251,7 +251,7 @@ class WorkingHoursController < ApplicationController
       end
     elsif start_task
       # check short entries or short gaps
-      cur = WorkingHours.where(:user_id => user.id).order("starting DESC").first
+      cur = WorkingHours.where(:user_id => user.id).order("#{WorkingHours.table_name}.starting DESC").first
       unless cur.nil?
         if cur.ending - cur.starting < MINGAP
           # replace short entry by new one
@@ -267,7 +267,7 @@ class WorkingHoursController < ApplicationController
 
     # start new task
     if start_task
-      prev = WorkingHours.where({:user_id => user.id, :project_id => new_project_id}).order("starting DESC").first
+      prev = WorkingHours.where({:user_id => user.id, :project_id => new_project_id}).order("#{WorkingHours.table_name}.starting DESC").first
       cur = WorkingHours.start(user, starting)
       logger.debug "start entry #{cur.id} task: #{cur.project_id}"
       cur.project_id = new_project_id
@@ -289,7 +289,7 @@ class WorkingHoursController < ApplicationController
       csv << headers.collect {|c| Redmine::CodesetUtil.from_utf8(c.to_s, l(:general_csv_encoding) ) }
 
       # csv lines
-      @working_hours.order("starting").each do |entry|
+      @working_hours.order("#{WorkingHours.table_name}.starting").each do |entry|
         fields = [
           (entry.user ? entry.user.name : nil),
           entry.project.name,
@@ -313,7 +313,7 @@ class WorkingHoursController < ApplicationController
     export = "BEGIN:VCALENDAR\n"
     export << "VERSION:2.0\n"
     export << "PRODID:-//Sourcepole//NONSGML Redmine Working Hours//EN\n"
-    @working_hours.order("starting").each do |entry|
+    @working_hours.order("#{WorkingHours.table_name}.starting").each do |entry|
       next if entry.ending.nil?
 
       export << "BEGIN:VEVENT\n"

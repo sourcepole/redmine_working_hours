@@ -20,7 +20,7 @@ get Redmine 2.6 stable branch:
   git checkout 2.6-stable
 
 get Working Hours plugin:
-  cd vendor/plugins/
+  cd plugins/
   git clone git://github.com/sourcepole/redmine_working_hours.git
 
 install Redmine

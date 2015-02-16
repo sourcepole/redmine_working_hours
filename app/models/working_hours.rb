@@ -23,7 +23,7 @@ class WorkingHours < ActiveRecord::Base
   end
 
   def self.find_current(user)
-    where("ending IS NULL AND user_id=?", user.id).order("starting DESC").first
+    where("ending IS NULL AND user_id=?", user.id).order("#{self.table_name}.starting DESC").first
   end
 
   # Tasks to display
