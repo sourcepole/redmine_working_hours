@@ -63,7 +63,7 @@
 
   <div id="timestamps_subform">
     <p><%= f.text_field :starting, :size => 25, :value => (@working_hours.starting.strftime("%Y-%m-%d %H:%M:%S") rescue nil) %></p>
-    <p><%= f.text_field 'break', "size" => 5 %></p>
+    <p><%= f.text_field 'break', "size" => 5 %> min</p>
     <p>
       <%= f.text_field :ending, :size => 25, :value => (@working_hours.ending.nil? ? '' : @working_hours.ending.strftime("%Y-%m-%d %H:%M:%S")) %>
       <%= l(:label_running) %><%= check_box_tag 'running', "1", @working_hours.ending.nil? %>
